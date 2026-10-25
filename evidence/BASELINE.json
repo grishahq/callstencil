@@ -1,0 +1,9 @@
+{
+  "upstream": "https://github.com/sparfenyuk/mcp-proxy",
+  "sha": "701a0453487d1b28c8f9806ee4863674c70210dd",
+  "version": "0.13.0",
+  "license": "MIT",
+  "comparison_baseline": "Retained compatibility path without policy in the same fork build",
+  "reference": "https://github.com/sparfenyuk/mcp-proxy/issues/270",
+  "reference_observed": "2026-10-25; open proposal for optional per-call authorization hook"
+}

@@ -305,7 +305,7 @@ async def test_run_mcp_server_with_default_server(
 
         # Verify calls
         mock_stdio_client.assert_called_once_with(mock_stdio_params)
-        mock_create_proxy.assert_called_once_with(mock_session)
+        mock_create_proxy.assert_called_once_with(mock_session, policy=None, audit=None)
         mock_create_routes.assert_called_once_with(
             mock_proxy,
             stateless_instance=mock_settings.stateless,

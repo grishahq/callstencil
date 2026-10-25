@@ -1,0 +1,12 @@
+{"mode": "baseline", "outcome": "simulated_only", "run": "main", "sequence": 1, "tool": "create_issue"}
+{"mode": "baseline", "outcome": "simulated_only", "run": "main", "sequence": 2, "tool": "create_issue"}
+{"mode": "baseline", "outcome": "simulated_only", "run": "main", "sequence": 3, "tool": "create_issue"}
+{"mode": "baseline", "outcome": "simulated_only", "run": "main", "sequence": 4, "tool": "delete_repository"}
+{"mode": "baseline", "outcome": "invalid_arguments", "run": "main", "sequence": 5, "tool": "create_issue"}
+{"mode": "baseline", "outcome": "invalid_arguments", "run": "main", "sequence": 6, "tool": "create_issue"}
+{"mode": "baseline", "outcome": "invalid_arguments", "run": "main", "sequence": 7, "tool": "create_issue"}
+{"mode": "baseline", "outcome": "upstream_error", "run": "main", "sequence": 8, "tool": "create_issue"}
+{"mode": "guarded", "outcome": "simulated_only", "run": "main", "sequence": 1, "tool": "create_issue"}
+{"mode": "guarded", "outcome": "upstream_error", "run": "main", "sequence": 2, "tool": "create_issue"}
+{"mode": "baseline", "outcome": "simulated_only", "run": "drift", "sequence": 1, "tool": "create_issue"}
+{"mode": "baseline", "outcome": "simulated_only", "run": "default-deny", "sequence": 1, "tool": "create_issue"}

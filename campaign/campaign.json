@@ -1,0 +1,208 @@
+{
+  "format_version": 1,
+  "title": "CallStencil v0.1.0 engineering campaign",
+  "language": "en",
+  "prepared_on": "2026-10-25",
+  "repository": "https://github.com/grishahq/callstencil",
+  "release_url": "https://github.com/grishahq/callstencil/releases/tag/v0.1.0",
+  "prepared": true,
+  "scheduled": false,
+  "published": false,
+  "release_claim_status": "pending_public_release_readback",
+  "ready_for_scheduling": false,
+  "status_note": "Prepared copy only. No publishing or scheduling action has been performed. Release availability claims require public release readback.",
+  "evidence_snapshot": {
+    "path": "../evidence/demo/report.json",
+    "passed": true,
+    "scenario_count": 11,
+    "baseline_receipts": 10,
+    "guarded_receipts": 2,
+    "blocked_calls": 8,
+    "meaning": "Controlled fixture receipt proves forwarding, not repository mutation. Receipts are written before fixture argument validation."
+  },
+  "attribution": "CallStencil is an MIT-licensed attributed fork of sparfenyuk/mcp-proxy by Sergey Parfenyuk and contributors, baseline 701a0453487d1b28c8f9806ee4863674c70210dd. Bridging is retained upstream capability; per-call policy is related prior art, not a category novelty claim.",
+  "beats": [
+    {
+      "id": "01-problem",
+      "name": "Connection is not permission",
+      "image": "assets/connection-is-not-permission.png",
+      "image_kind": "generated_concept",
+      "alt_text": "Conceptual cut-paper illustration: abstract cards approach a navy stencil gate; a matching teal card passes through. Text reads 'CallStencil' and 'Connection is not permission.'",
+      "audience": "Engineers connecting agents to MCP tools",
+      "hook": "A working tool connection answers a transport question. It leaves the permission question open.",
+      "evidence_references": [
+        "../README.md",
+        "../docs/POLICY.md",
+        "../evidence/demo/report.json"
+      ],
+      "cta": "Inspect the hidden_direct_call scenario and ask where your own call boundary lives.",
+      "linkedin": "A working tool connection answers a transport question. It leaves the permission question open.\n\nSuppose an agent may create an issue in one repository with a small set of labels. Making create_issue discoverable doesn't express that rule. Hiding another tool from discovery doesn't prove a direct call will be refused either.\n\nCallStencil puts an explicit policy check before forwarding tools/call: exact tool name, required arguments, allowed values and a reviewed input-schema fingerprint. Unmatched calls deny. Discovery filtering helps the client, but the call path carries the enforcement.\n\nThe offline fixture includes a direct call to an unadvertised tool. The unguarded bridge forwards it; the guarded bridge produces no server receipt. This is a controlled receipt experiment, not a real destructive operation.\n\nCallStencil is an attributed fork of Sergey Parfenyuk and contributors' mcp-proxy. Its useful transport bridge comes from upstream.\n\nInspect the hidden_direct_call scenario and ask where your own call boundary lives:\nhttps://github.com/grishahq/callstencil",
+      "x_thread": [
+        "1/4 A working MCP connection answers \"can I reach this tool?\" A useful next question is \"may this exact call pass?\" Repository and label restrictions belong at the call boundary.",
+        "2/4 Discovery is useful UX, but hiding a tool doesn't prove direct calls are refused. CallStencil's offline fixture includes a direct call to an unadvertised tool: the guarded path records no server receipt.",
+        "3/4 CallStencil checks exact tool names, arguments and pinned input schemas before forwarding tools/call. It is an attributed fork of mcp-proxy by Sergey Parfenyuk and contributors; bridging is upstream work.",
+        "4/4 Inspect hidden_direct_call in the recorded demo. The fixture records receipt, never a real repository deletion. Where is the equivalent boundary in your tool setup?\nhttps://github.com/grishahq/callstencil"
+      ],
+      "platform_items": {
+        "linkedin": {
+          "id": "01-problem-linkedin",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        },
+        "x": {
+          "id": "01-problem-x",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        }
+      }
+    },
+    {
+      "id": "02-design",
+      "name": "Small rules, explicit tradeoffs",
+      "image": "assets/test-the-boundary.png",
+      "image_kind": "generated_concept",
+      "alt_text": "Conceptual engineering workbench in ivory, navy, teal and coral: a stencil checks cards beside a receipt roll. Text reads 'CallStencil' and 'Test the boundary'.",
+      "audience": "Platform engineers reviewing MCP policy design",
+      "hook": "A permission rule should be small enough to review and strict enough to fail closed.",
+      "evidence_references": [
+        "../docs/POLICY.md",
+        "../README.md",
+        "../ATTRIBUTION.md"
+      ],
+      "cta": "Review the policy reference and try a deny-all policy before adding one narrow rule.",
+      "linkedin": "A permission rule should be small enough to review and strict enough to fail closed.\n\nCallStencil v1 uses exact tool names, required argument keys and explicit constraints. For the issue fixture, a rule can require one repository and limit every label to an approved set. Unknown argument keys deny. An empty rules array is a valid deny-all policy.\n\nThere is another piece to review: the server's input schema. Each rule pins its SHA-256 fingerprint. A fresh schema lookup on every call lets the bridge reject a changed or unavailable schema before forwarding.\n\nThat choice costs a round trip and may expose compatibility problems. It also has a clear limit: a schema fingerprint cannot establish that a server's implementation behaves as advertised. Pin and review the server build too; lookup and forwarding are separate operations.\n\nThis stays deliberately narrow: one stdio server exposed over HTTP or SSE, with policy enforcement on tools/call. It provides no OS sandbox or caller-identity binding.\n\nThe transport foundation is mcp-proxy, credited in the repository. Per-call policy has existing prior art.\n\nRead the policy reference and try deny-all before adding one narrow rule:\nhttps://github.com/grishahq/callstencil/blob/main/docs/POLICY.md",
+      "x_thread": [
+        "1/4 A small policy is easier to review. CallStencil v1 uses exact tool names, required argument keys and explicit value constraints. Unknown argument keys deny. An empty rules array denies every tool call.",
+        "2/4 Each rule pins the reviewed input schema's SHA-256 fingerprint. A fresh lookup on every call rejects changed or unavailable schemas before forwarding. The cost is another round trip and a compatibility tradeoff.",
+        "3/4 A schema digest can't prove server behavior. Review and pin the server build too. Scope is narrow: tools/call for one stdio server exposed over HTTP/SSE. No OS sandbox or caller-identity binding.",
+        "4/4 Start with deny-all, then add one narrow rule. Review the policy language and its limits. CallStencil builds on the credited mcp-proxy transport bridge.\nhttps://github.com/grishahq/callstencil/blob/main/docs/POLICY.md"
+      ],
+      "platform_items": {
+        "linkedin": {
+          "id": "02-design-linkedin",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        },
+        "x": {
+          "id": "02-design-x",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        }
+      }
+    },
+    {
+      "id": "03-demo",
+      "name": "Follow the call to a receipt",
+      "image": "assets/demo-report.png",
+      "image_kind": "software_capture",
+      "alt_text": "Browser capture of the actual CallStencil offline demo report, showing passing scenario checks and baseline versus guarded server receipts.",
+      "audience": "Developers who want a reproducible tool-permission demo",
+      "hook": "A denial message is useful. An independent server receipt answers a different question: did the call arrive?",
+      "evidence_references": [
+        "../evidence/demo/report.json",
+        "../evidence/demo/report.html",
+        "../README.md"
+      ],
+      "cta": "Run the local fixture and compare decisions.jsonl with receipts.jsonl.",
+      "linkedin": "A denial message is useful. An independent server receipt answers a different question: did the call arrive?\n\nCallStencil's demo runs a real subprocess stdio server behind a Streamable HTTP bridge on loopback. The server is a controlled issue fixture. No model key, external account or GitHub mutation is involved.\n\nThe runner exercises 11 scenarios: an approved issue, wrong repository, forbidden label, a hidden direct call, malformed arguments, schema drift, deny-all, a server error and invalid policy startup. The recorded run passes its receipt and error assertions.\n\nFollow one case through the files: the wrong-repository call gets a receipt through the unguarded bridge, and zero receipts through the guarded bridge. Then inspect upstream_error: it passes policy and reaches the fixture, which returns an error. Authorization passed; execution did not succeed.\n\nThat distinction is why the report includes both decision records and server receipts. A green authorization record is not an application success claim.\n\nThe bridge is an attributed mcp-proxy fork. The added fixture and runner make this particular boundary inspectable.\n\nRun the local fixture, then compare decisions.jsonl with receipts.jsonl:\nhttps://github.com/grishahq/callstencil",
+      "x_thread": [
+        "1/4 A denial message and a server receipt answer different questions. CallStencil's offline demo compares both across a real Streamable HTTP bridge and a subprocess stdio fixture. No model key or external account needed.",
+        "2/4 The recorded run passes 11 scenarios. Wrong repository: baseline receipt 1, guarded receipt 0. The fixture never creates GitHub issues; a receipt means the forwarded call arrived.",
+        "3/4 The upstream_error case matters: policy allows the call, the fixture receives it, then returns an error. Authorization success and application success are separate facts. Inspect decisions and receipts together.",
+        "4/4 Reproduce the fixture locally and inspect report.json, decisions.jsonl and receipts.jsonl. CallStencil is an attributed mcp-proxy fork; the report is a bounded experiment.\nhttps://github.com/grishahq/callstencil"
+      ],
+      "platform_items": {
+        "linkedin": {
+          "id": "03-demo-linkedin",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        },
+        "x": {
+          "id": "03-demo-x",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        }
+      }
+    },
+    {
+      "id": "04-experiment",
+      "name": "Read the receipt comparison fairly",
+      "image": "assets/receipts-comparison.png",
+      "image_kind": "data_visualization",
+      "alt_text": "Chart derived from the recorded offline demo: 10 baseline receipts, 2 guarded receipts and 8 blocked call attempts. Receipt totals describe fixture arrival, not real repository mutations.",
+      "audience": "Engineers assessing evidence and experiment limits",
+      "hook": "10 baseline receipts. 2 guarded receipts. The useful part is what those numbers mean.",
+      "evidence_references": [
+        "../evidence/demo/report.json",
+        "../README.md",
+        "../docs/POLICY.md"
+      ],
+      "cta": "Inspect the per-scenario observations instead of treating aggregate counts as a security score.",
+      "linkedin": "10 baseline receipts. 2 guarded receipts. The useful part is what those numbers mean.\n\nThe CallStencil demo compares the unguarded bridge with the guarded bridge using controlled scenarios and an independent fixture receipt log. Eight call attempts that reach the baseline fixture produce zero guarded receipts. The approved call and an allowed call that returns a fixture error account for the two guarded receipts.\n\nAn important detail: the fixture writes its receipt before validating arguments. Some baseline calls therefore have a receipt AND an error. Ten receipts do not mean ten successful operations, and no real repository is modified.\n\nThe 11th scenario tests malformed policy startup. It has no baseline call; the guarded process fails before a server call occurs. Read its startup assertion separately from the ten paired call cases.\n\nThese are deterministic local checks of selected policy paths. They are not production coverage, a latency benchmark, or proof about every server. A pinned schema detects declared changes; it cannot attest to implementation semantics.\n\nCallStencil retains mcp-proxy's transport work with explicit attribution. The contribution here is a narrow, reproducible policy experiment.\n\nInspect the per-scenario observations before interpreting the totals:\nhttps://github.com/grishahq/callstencil/blob/main/evidence/demo/report.json",
+      "x_thread": [
+        "1/5 The CallStencil fixture recorded 10 baseline receipts and 2 guarded receipts. Eight call attempts reached the unguarded fixture and produced zero guarded receipts. These are receipt counts, not a security score.",
+        "2/5 The fixture writes a receipt BEFORE argument validation. A baseline call can have both a receipt and an error. No real repository is modified. Arrival is the measured event.",
+        "3/5 The two guarded receipts are an approved call and an allowed call returning a fixture error. The 11th scenario checks invalid-policy startup; it has no paired baseline call.",
+        "4/5 Limits: selected deterministic local scenarios, no production coverage or latency claim. Schema pinning detects declared schema changes, not silently changed server behavior. Inspect individual observations.",
+        "5/5 The full report is checked in. Reproduce it and challenge the assumptions. CallStencil builds on mcp-proxy with explicit attribution.\nhttps://github.com/grishahq/callstencil/blob/main/evidence/demo/report.json"
+      ],
+      "platform_items": {
+        "linkedin": {
+          "id": "04-experiment-linkedin",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        },
+        "x": {
+          "id": "04-experiment-x",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        }
+      }
+    },
+    {
+      "id": "05-release",
+      "name": "A quickstart that leaves evidence",
+      "image": "assets/release-quickstart.png",
+      "image_kind": "software_capture",
+      "alt_text": "Actual clean-install CallStencil quickstart output for v0.1.0, with the scenario command and successful evidence report generation.",
+      "audience": "Python and MCP developers evaluating the alpha",
+      "hook": "A useful alpha quickstart should leave files you can inspect, not just a success message.",
+      "evidence_references": [
+        "../README.md",
+        "../ATTRIBUTION.md",
+        "../evidence/demo/report.json"
+      ],
+      "cta": "Follow the repository quickstart in a fresh environment and inspect the generated report.",
+      "release_claim_status": "pending_public_release_readback",
+      "linkedin": "A useful alpha quickstart should leave files you can inspect, not just a success message.\n\nCallStencil's local walkthrough ends with an HTML report, JSON observations, server receipts, decision records and a transcript. Run callstencil-scenarios and inspect the allowed call, a denied argument, the hidden direct call and the allowed fixture error side by side.\n\nThe source quickstart uses Python 3.10+ and uv. Use a fresh environment: CallStencil is an attributed fork of mcp-proxy and retains the mcp_proxy module, so the distributions should not be co-installed.\n\nFor the guarded bridge, callstencil requires an explicit valid policy. The compatibility mcp-proxy command remains available; without --policy it forwards without CallStencil enforcement. That distinction belongs in the quickstart, where it can prevent a misleading test.\n\nThe alpha scope is tools/call policy for a stdio server exposed over HTTP or SSE. It does not protect direct server access or supply an OS sandbox.\n\nStart with the controlled fixture, read the policy reference, and report a minimal reproduction if the observed boundary differs from the documented one.\n\nFollow the quickstart in a fresh environment and inspect the generated report:\nhttps://github.com/grishahq/callstencil",
+      "x_thread": [
+        "1/4 A useful alpha quickstart leaves evidence. CallStencil's local runner writes an HTML report, JSON observations, server receipts, decision records and a transcript. Inspect the boundary, not just the exit code.",
+        "2/4 Start in a fresh environment with Python 3.10+ and uv. CallStencil is an attributed mcp-proxy fork and retains the mcp_proxy module; don't co-install the two distributions.",
+        "3/4 The callstencil command requires a valid policy. The compatibility mcp-proxy command without --policy has no CallStencil enforcement. v0.1 scope: tools/call for a stdio server exposed over HTTP/SSE.",
+        "4/4 Follow the source quickstart, run the offline fixture and inspect its report. Report minimal policy/server/schema reproductions for unexpected behavior.\nhttps://github.com/grishahq/callstencil"
+      ],
+      "platform_items": {
+        "linkedin": {
+          "id": "05-release-linkedin",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        },
+        "x": {
+          "id": "05-release-x",
+          "prepared": true,
+          "scheduled": false,
+          "published": false
+        }
+      }
+    }
+  ]
+}

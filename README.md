@@ -1,448 +1,72 @@
-# mcp-proxy
+# CallStencil
 
-![GitHub License](https://img.shields.io/github/license/sparfenyuk/mcp-proxy)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mcp-proxy)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/mcp-proxy)
-[![codecov](https://codecov.io/gh/sparfenyuk/mcp-proxy/graph/badge.svg?token=31VV9L7AZQ)](https://codecov.io/gh/sparfenyuk/mcp-proxy)
+**An MCP bridge with permissions you can test.** Public alpha v0.1.0.
 
-- [mcp-proxy](#mcp-proxy)
-  - [About](#about)
-  - [1. stdio to SSE/StreamableHTTP](#1-stdio-to-ssestreamablehttp)
-    - [1.1 Configuration](#11-configuration)
-    - [1.2 Example usage](#12-example-usage)
-  - [2. SSE to stdio](#2-sse-to-stdio)
-    - [2.1 Configuration](#21-configuration)
-    - [2.2 Example usage](#22-example-usage)
-  - [Named Servers](#named-servers)
-  - [Installation](#installation)
-    - [Installing via PyPI](#installing-via-pypi)
-    - [Installing via Github repository (latest)](#installing-via-github-repository-latest)
-    - [Installing as container](#installing-as-container)
-    - [Troubleshooting](#troubleshooting)
-  - [Extending the container image](#extending-the-container-image)
-  - [Docker Compose Setup](#docker-compose-setup)
-  - [Command line arguments](#command-line-arguments)
-    - [Example config file](#example-config-file)
-  - [Testing](#testing)
+CallStencil is an attributed fork of [mcp-proxy](https://github.com/sparfenyuk/mcp-proxy). It retains the useful stdio/SSE/Streamable HTTP bridge and adds strict per-call policies for a stdio server exposed over HTTP or SSE. Rules check tool names, argument values and input-schema fingerprints **before** forwarding `tools/call`.
 
-## About
+The included issue server is a controlled, offline fixture. It records receipt of calls; it never creates issues or deletes repositories on GitHub. No model key or external account is needed.
 
-The `mcp-proxy` is a tool that lets you switch between server transports. There are two supported modes:
+## Install and reproduce
 
-1. stdio to SSE/StreamableHTTP
-2. SSE to stdio
+Python 3.10+ and [uv](https://docs.astral.sh/uv/) are supported. Use an isolated environment: this fork and upstream share the `mcp_proxy` module.
 
-## 1. stdio to SSE/StreamableHTTP
-
-Run a proxy server from stdio that connects to a remote SSE server.
-
-This mode allows clients like Claude Desktop to communicate to a remote server over SSE even though it is not supported
-natively.
-
-```mermaid
-graph LR
-    A["Claude Desktop"] <--> |stdio| B["mcp-proxy"]
-    B <--> |SSE| C["External MCP Server"]
-
-    style A fill:#ffe6f9,stroke:#333,color:black,stroke-width:2px
-    style B fill:#e6e6ff,stroke:#333,color:black,stroke-width:2px
-    style C fill:#e6ffe6,stroke:#333,color:black,stroke-width:2px
+```sh
+git clone https://github.com/grishahq/callstencil.git
+cd callstencil
+git checkout v0.1.0
+uv sync --frozen
+uv run callstencil-scenarios --output .local-demo
 ```
 
-### 1.1 Configuration
+Open `.local-demo/report.html`. Inspect `report.json`, `receipts.jsonl`, `decisions.jsonl` and `transcript.txt` to distinguish proxy denials, server receipt and server errors. The command exits nonzero if a receipt or error assertion fails. Scenarios use local subprocesses and real Streamable HTTP connections on loopback; no remote tool account is touched.
 
-This mode requires providing the URL of the MCP Server's SSE endpoint as the program’s first argument. If the server uses Streamable HTTP transport, make sure to enforce it on the `mcp-proxy` side by passing `--transport=streamablehttp`.
+For a clean installation from the release wheel, download `callstencil-0.1.0-py3-none-any.whl` and `SHA256SUMS` from the [GitHub release](https://github.com/grishahq/callstencil/releases/tag/v0.1.0), verify the checksum, then:
 
-Arguments
-
-| Name             | Required | Description                                                                                                       | Example                                       |
-| ---------------- | -------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| `command_or_url` | Yes      | The MCP server SSE endpoint to connect to                                                                         | http://example.io/sse                         |
-| `--headers`      | No       | Headers to use for the MCP server SSE connection                                                                  | Authorization 'Bearer my-secret-access-token' |
-| `--transport`    | No       | Decides which transport protocol to use when connecting to an MCP server. Can be either 'sse' or 'streamablehttp' | streamablehttp                                |
-| `--client-id`    | No       | OAuth2 client ID for authentication                                                                               | your_client_id                                |
-| `--client-secret`| No       | OAuth2 client secret for authentication                                                                           | your_client_secret                            |
-| `--token-url`    | No       | OAuth2 token endpoint URL for authentication                                                                      | https://auth.example.com/oauth/token          |
-| `--username`     | No       | Username for authentication                                                                                       | user                                          |
-| `--password`     | No       | Password for authentication                                                                                       | password                                      |
-| `--digest`       | No       | Use digest authentication                                                                                         |                                               |
-
-Environment Variables
-
-| Name               | Required | Description                                                                  | Example    |
-| ------------------ | -------- | ---------------------------------------------------------------------------- | ---------- |
-| `API_ACCESS_TOKEN` | No       | Can be used instead of `--headers Authorization 'Bearer <API_ACCESS_TOKEN>'` | YOUR_TOKEN |
-
-### 1.2 Example usage
-
-`mcp-proxy` is supposed to be started by the MCP Client, so the configuration must be done accordingly.
-
-For Claude Desktop, the configuration entry can look like this:
-
-```json
-{
-  "mcpServers": {
-    "mcp-proxy": {
-      "command": "mcp-proxy",
-      "args": [
-        "http://example.io/sse"
-      ],
-      "env": {
-        "API_ACCESS_TOKEN": "access-token"
-      }
-    }
-  }
-}
+```sh
+uv venv .venv
+uv pip install --python .venv/bin/python ./callstencil-0.1.0-py3-none-any.whl
+.venv/bin/callstencil-scenarios --output demo-evidence
 ```
 
-## 2. SSE to stdio
+The wheel is self-contained for the fixture and runner. Registry publication is not required.
 
-Run a proxy server exposing a SSE server that connects to a local stdio server.
+## Run the guarded bridge
 
-This allows remote connections to the local stdio server. The `mcp-proxy` opens a port to listen for SSE requests,
-spawns a local stdio server that handles MCP requests.
+The scenario run emits a validated `policy.json` pinned to the packaged fixture schema:
 
-```mermaid
-graph LR
-    A["LLM Client"] <-->|SSE| B["mcp-proxy"]
-    B <-->|stdio| C["Local MCP Server"]
-
-    style A fill:#ffe6f9,stroke:#333,color:black,stroke-width:2px
-    style B fill:#e6e6ff,stroke:#333,color:black,stroke-width:2px
-    style C fill:#e6ffe6,stroke:#333,color:black,stroke-width:2px
+```sh
+uv run callstencil --policy .local-demo/policy.json \
+  --audit-log .local-demo/live-decisions.jsonl --host 127.0.0.1 --port 8096 -- \
+  .venv/bin/python -m mcp_proxy.demo_server --receipts .local-demo/live-receipts.jsonl
 ```
 
-### 2.1 Configuration
+Point an MCP client at `http://127.0.0.1:8096/mcp` (Streamable HTTP) or `/sse`. `callstencil` requires `--policy`; omitted, malformed or unknown configuration fails before server launch. Policies are loaded once at startup; restart to apply edits. The v0.1 command supports one stdio server per process. [Policy reference](docs/POLICY.md) explains the language and decision codes.
 
-This mode requires the `--sse-port` argument to be set. The `--sse-host` argument can be set to specify the host IP
-address that the SSE server will listen on. Additional environment variables can be passed to the local stdio server
-using the `--env` argument. The command line arguments for the local stdio server must be passed after the `--`
-separator.
+The compatibility `mcp-proxy` and `mcp-reverse-proxy` commands retain upstream transport behavior. **Without `--policy`, the compatibility bridge forwards calls without CallStencil policy enforcement.** See the preserved [upstream guide](docs/UPSTREAM_README.md) for bridge directions, named servers and outbound authentication. Policy use in URL/reverse mode is rejected by the CLI in v0.1.
 
-Arguments
+## What the boundary covers
 
-| Name                                 | Required                   | Description                                                                                   | Example                                     |
-| ------------------------------------ | -------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `command_or_url`                     | Yes                        | The command to spawn the MCP stdio server                                                     | uvx mcp-server-fetch                        |
-| `--port`                             | No, random available       | The MCP server port to listen on                                                              | 8080                                        |
-| `--host`                             | No, `127.0.0.1` by default | The host IP address that the MCP server will listen on                                        | 0.0.0.0                                     |
-| `--env`                              | No                         | Additional environment variables to pass to the MCP stdio server. Can be used multiple times. | FOO BAR                                     |
-| `--cwd`                              | No                         | The working directory to pass to the MCP stdio server process.                                | /tmp                                        |
-| `--pass-environment`                 | No                         | Pass through all environment variables when spawning the server                               | --no-pass-environment                       |
-| `--allow-origin`                     | No                         | Allowed origins for the SSE server. Can be used multiple times. Default is no CORS allowed.   | --allow-origin "\*"                         |
-| `--expose-header`                    | No                         | Headers added to `Access-Control-Expose-Headers`. Can be used multiple times. Defaults to `mcp-session-id`. | --expose-header Custom-Header              |
-| `--stateless`                        | No                         | Enable stateless mode for streamable http transports. Default is False                        | --no-stateless                              |
-| `--named-server NAME COMMAND_STRING` | No                         | Defines a named stdio server.                                                                 | --named-server fetch 'uvx mcp-server-fetch' |
-| `--named-server-config FILE_PATH`    | No                         | Path to a JSON file defining named stdio servers.                                             | --named-server-config /path/to/servers.json |
-| `--sse-port` (deprecated)            | No, random available       | The SSE server port to listen on                                                              | 8080                                        |
-| `--sse-host` (deprecated)            | No, `127.0.0.1` by default | The host IP address that the SSE server will listen on                                        | 0.0.0.0                                     |
+- Default deny for tools without an exact rule, even if called directly without discovery.
+- Every declared argument is required; undeclared arguments deny. Allowed values and array items are explicit.
+- Fresh input-schema lookup on every call; mismatched, unavailable or ambiguous schemas deny. This adds a round trip and a compatibility tradeoff.
+- Value-free decision records: no argument values, arbitrary request tool names, metadata, server output or exception strings. A configured audit-write failure denies forwarding.
+- Guarded calls strip arbitrary `_meta` and retain only a non-null protocol progress token. Discovery filtering helps usability; it is not the enforcement boundary.
 
-### 2.2 Example usage
+This is **not an OS sandbox**. It does not protect direct access to the server, bind a rule to a human identity, restrict resources/prompts/other MCP methods, guarantee pathname safety, or establish that the server implements its advertised semantics. An input-schema digest detects declared schema changes, not a malicious or silently changed implementation. Schema lookup and forwarding are separate protocol operations: pin/review the actual server build as well. Audit files are local records, not tamper-proof logs. Third-party server stdout/stderr and upstream debug logs are outside the redacted decision-record contract. Bind to loopback by default; do not expose an unauthenticated bridge to untrusted networks.
 
-To start the `mcp-proxy` server that listens on port 8080 and connects to the local MCP server:
+## Evidence and development
 
-```bash
-# Start the MCP server behind the proxy
-mcp-proxy uvx mcp-server-fetch
-
-# Start the MCP server behind the proxy with a custom port
-# (deprecated) mcp-proxy --sse-port=8080 uvx mcp-server-fetch
-mcp-proxy --port=8080 uvx mcp-server-fetch
-
-# Start the MCP server behind the proxy with a custom host and port
-# (deprecated) mcp-proxy --sse-host=0.0.0.0 --sse-port=8080 uvx mcp-server-fetch
-mcp-proxy --host=0.0.0.0 --port=8080 uvx mcp-server-fetch
-
-# Start the MCP server behind the proxy with a custom user agent
-# Note that the `--` separator is used to separate the `mcp-proxy` arguments from the `mcp-server-fetch` arguments
-# (deprecated) mcp-proxy --sse-port=8080 -- uvx mcp-server-fetch --user-agent=YourUserAgent
-mcp-proxy --port=8080 -- uvx mcp-server-fetch --user-agent=YourUserAgent
-
-# Start multiple named MCP servers behind the proxy
-mcp-proxy --port=8080 --named-server fetch 'uvx mcp-server-fetch' --named-server fetch2 'uvx mcp-server-fetch'
-
-# Start multiple named MCP servers using a configuration file
-mcp-proxy --port=8080 --named-server-config ./servers.json
-
-# Start the MCP server with CORS enabled and custom exposed headers
-mcp-proxy --port=8080 --allow-origin='*' --expose-header Custom-Header uvx mcp-server-fetch
+```sh
+uv sync --frozen
+uv run pytest
+uv run mypy src
+uv build
 ```
 
-## Named Servers
+[Recorded demo](evidence/demo/report.html), [methodology](docs/EXPERIMENT.md), [independent code review](docs/REVIEW.md), [changelog](CHANGELOG.md), and [implementation/roadmap](PLAN.md). Results describe a deterministic controlled fixture, not production security coverage or a latency benchmark.
 
-- `NAME` is used in the URL path `/servers/NAME/`.
-- `COMMAND_STRING` is the command to start the server (e.g., 'uvx mcp-server-fetch').
-  - Can be used multiple times.
-  - This argument is ignored if `--named-server-config` is used.
-- `FILE_PATH` - If provided, this is the exclusive source for named servers, and `--named-server` CLI arguments are ignored.
+v0.2 plans general JSON/JUnit scenario suites for CI. v0.3 plans policy diffs and schema-drift workflows for two documented servers. Monthly upstream checks and focused regression fixes are described in the plan. No security SLA is promised.
 
-If a default server is specified (the `command_or_url` argument without `--named-server` or `--named-server-config`), it will be accessible at the root paths (e.g., `http://127.0.0.1:8080/sse`).
+## Credits and license
 
-Named servers (whether defined by `--named-server` or `--named-server-config`) will be accessible under `/servers/<server-name>/` (e.g., `http://127.0.0.1:8080/servers/fetch1/sse`).
-The `/status` endpoint provides global status.
-
-**JSON Configuration File Format for `--named-server-config`:**
-
-The JSON file should follow this structure:
-
-```json
-{
-  "mcpServers": {
-    "fetch": {
-      "disabled": false,
-      "timeout": 60,
-      "command": "uvx",
-      "args": [
-        "mcp-server-fetch"
-      ],
-      "transportType": "stdio"
-    },
-    "github": {
-      "timeout": 60,
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_TOKEN>"
-      },
-      "transportType": "stdio"
-    }
-  }
-}
-```
-
-- `mcpServers`: A dictionary where each key is the server name (used in the URL path, e.g., `/servers/fetch/`) and the value is an object defining the server.
-- `command`: (Required) The command to execute for the stdio server.
-- `args`: (Optional) A list of arguments for the command. Defaults to an empty list.
-- `enabled`: (Optional) If `false`, this server definition will be skipped. Defaults to `true`.
-- `timeout` and `transportType`: These fields are present in standard MCP client configurations but are currently **ignored** by `mcp-proxy` when loading named servers. The transport type is implicitly "stdio".
-
-## Installation
-
-### Installing via PyPI
-
-The stable version of the package is available on the PyPI repository. You can install it using the following command:
-
-```bash
-# Option 1: With uv (recommended)
-uv tool install mcp-proxy
-
-# Option 2: With pipx (alternative)
-pipx install mcp-proxy
-```
-
-Once installed, you can run the server using the `mcp-proxy` command. See configuration options for each mode above.
-
-### Installing via Github repository (latest)
-
-The latest version of the package can be installed from the git repository using the following command:
-
-```bash
-uv tool install git+https://github.com/sparfenyuk/mcp-proxy
-```
-
-> [!NOTE]
-> If you have already installed the server, you can update it using `uv tool upgrade --reinstall` command.
-
-> [!NOTE]
-> If you want to delete the server, use the `uv tool uninstall mcp-proxy` command.
-
-### Installing as container
-
-Starting from version 0.3.2, it's possible to pull and run the corresponding container image.
-Release images are published to GHCR and Docker Hub as multi-platform manifests for `linux/amd64` and `linux/arm64`;
-Docker selects the matching image for the host architecture automatically.
-
-```bash
-docker run --rm -t ghcr.io/sparfenyuk/mcp-proxy:v0.12.0 --help
-docker run --rm -t sparfenyuk/mcp-proxy:v0.12.0 --help
-```
-
-### Troubleshooting
-
-- **Problem**: Claude Desktop can't start the server: ENOENT code in the logs
-
-  **Solution**: Try to use the full path to the binary. To do so, open a terminal and run the command`which mcp-proxy` (
-  macOS, Linux) or `where.exe mcp-proxy` (Windows). Then, use the output path as a value for 'command' attribute:
-  ```json
-    "fetch": {
-      "command": "/full/path/to/bin/mcp-proxy",
-      "args": [
-        "http://localhost:8932/sse"
-      ]
-    }
-  ```
-
-## Extending the container image
-
-You can extend the `mcp-proxy` container image to include additional executables. For instance, `uv` is not included by
-default, but you can create a custom image with it:
-
-```Dockerfile
-# file: mcp-proxy.Dockerfile
-
-FROM ghcr.io/sparfenyuk/mcp-proxy:latest
-
-# Install the 'uv' package
-RUN python3 -m ensurepip && pip install --no-cache-dir uv
-
-ENV PATH="/usr/local/bin:$PATH" \
-    UV_PYTHON_PREFERENCE=only-system
-
-ENTRYPOINT ["catatonit", "--", "mcp-proxy"]
-```
-
-## Docker Compose Setup
-
-With the custom Dockerfile, you can define a service in your Docker Compose file:
-
-```yaml
-services:
-  mcp-proxy-custom:
-    build:
-      context: .
-      dockerfile: mcp-proxy.Dockerfile
-    network_mode: host
-    restart: unless-stopped
-    ports:
-      - 8096:8096
-    command: "--pass-environment --port=8096 --sse-host 0.0.0.0 uvx mcp-server-fetch"
-```
-
-> [!NOTE]
-> Don't forget to set `--pass-environment` argument, otherwise you'll end up with the error "No interpreter found in
-> managed installations or search path"
-
-## Command line arguments
-
-```bash
-usage: mcp-proxy [-h] [--version] [-H KEY VALUE]
-                 [--transport {sse,streamablehttp}] [--verify-ssl [VALUE]]
-                 [--no-verify-ssl] [-e KEY VALUE] [--cwd CWD]
-                 [--client-id CLIENT_ID] [--client-secret CLIENT_SECRET] [--token-url TOKEN_URL]
-                 [--pass-environment | --no-pass-environment]
-                 [--log-level LEVEL] [--debug | --no-debug]
-                 [--named-server NAME COMMAND_STRING]
-                 [--named-server-config FILE_PATH] [--port PORT] [--host HOST]
-                 [--stateless | --no-stateless] [--sse-port SSE_PORT]
-                 [--sse-host SSE_HOST]
-                 [--allow-origin ALLOW_ORIGIN [ALLOW_ORIGIN ...]]
-                 [--expose-header HEADER]
-                 [command_or_url] [args ...]
-
-Start the MCP proxy in one of two possible modes: as a client or a server.
-
-positional arguments:
-  command_or_url        Command or URL to connect to. When a URL, will run an SSE/StreamableHTTP client. Otherwise, if --named-server is not used, this will be the command for the default stdio client. If --named-server is used, this argument is ignored for stdio mode unless no default server is desired. See corresponding options for more details.
-
-options:
-  -h, --help            show this help message and exit
-  --version             Show the version and exit
-
-SSE/StreamableHTTP client options:
-  -H, --headers KEY VALUE
-                        Headers to pass to the SSE server. Can be used multiple times.
-  --transport {sse,streamablehttp}
-                        The transport to use for the client. Default is SSE.
-  --verify-ssl [VALUE]  Control SSL verification when acting as a client. Use without a value to force verification, pass 'false' to disable, or provide a path to a PEM bundle.
-  --no-verify-ssl       Disable SSL verification (alias for --verify-ssl false).
-  --client-id CLIENT_ID
-                        OAuth2 client ID for authentication
-  --client-secret CLIENT_SECRET
-                        OAuth2 client secret for authentication
-  --token-url TOKEN_URL
-                        OAuth2 token URL for authentication
-  --username USERNAME   Username for authentication
-  --password PASSWORD   Password for authentication
-  --digest              Use digest authentication
-
-stdio client options:
-  args                  Any extra arguments to the command to spawn the default server. Ignored if only named servers are defined.
-  -e, --env KEY VALUE   Environment variables used when spawning the default server. Can be used multiple times. For named servers, environment is inherited or passed via --pass-environment.
-  --cwd CWD             The working directory to use when spawning the default server process. Named servers inherit the proxy's CWD.
-  --pass-environment, --no-pass-environment
-                        Pass through all environment variables when spawning all server processes.
-  --log-level LEVEL     Set the log level. Default is INFO.
-  --debug, --no-debug   Enable debug mode with detailed logging output. Equivalent to --log-level DEBUG. If both --debug and --log-level are provided, --debug takes precedence.
-  --named-server NAME COMMAND_STRING
-                        Define a named stdio server. NAME is for the URL path /servers/NAME/. COMMAND_STRING is a single string with the command and its arguments (e.g., 'uvx mcp-server-fetch --timeout 10'). These servers inherit the proxy's CWD and environment from --pass-environment.
-  --named-server-config FILE_PATH
-                        Path to a JSON configuration file for named stdio servers. If provided, this will be the exclusive source for named server definitions, and any --named-server CLI arguments will be ignored.
-
-SSE server options:
-  --port PORT           Port to expose an SSE server on. Default is a random port
-  --host HOST           Host to expose an SSE server on. Default is 127.0.0.1
-  --stateless, --no-stateless
-                        Enable stateless mode for streamable http transports. Default is False
-  --sse-port SSE_PORT   (deprecated) Same as --port
-  --sse-host SSE_HOST   (deprecated) Same as --host
-  --allow-origin ALLOW_ORIGIN [ALLOW_ORIGIN ...]
-                        Allowed origins for the SSE server. Can be used multiple times. Default is no CORS allowed.
-  --expose-header HEADER
-                        Headers to expose via Access-Control-Expose-Headers. Defaults to 'Mcp-Session-Id'. Can be used multiple times.
-
-Examples:
-  mcp-proxy http://localhost:8080/sse
-  mcp-proxy --no-verify-ssl https://server.local/sse
-  mcp-proxy --transport streamablehttp http://localhost:8080/mcp
-  mcp-proxy --transport streamablehttp --username user --password pass https://server.local/mcp
-  mcp-proxy --headers Authorization 'Bearer YOUR_TOKEN' http://localhost:8080/sse
-  mcp-proxy --client-id CLIENT_ID --client-secret CLIENT_SECRET --token-url https://auth.example.com/token http://localhost:8080/sse
-  mcp-proxy --port 8080 -- your-command --arg1 value1 --arg2 value2
-  mcp-proxy --named-server fetch 'uvx mcp-server-fetch' --port 8080
-  mcp-proxy your-command --port 8080 -e KEY VALUE -e ANOTHER_KEY ANOTHER_VALUE
-  mcp-proxy your-command --port 8080 --allow-origin='*'
-  mcp-proxy your-command --port 8080 --allow-origin='*' --expose-header Custom-Header
-```
-
-### Example config file
-
-```json
-{
-  "mcpServers": {
-    "fetch": {
-      "enabled": true,
-      "timeout": 60,
-      "command": "uvx",
-      "args": [
-        "mcp-server-fetch"
-      ],
-      "transportType": "stdio"
-    },
-    "github": {
-      "timeout": 60,
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_TOKEN>"
-      },
-      "transportType": "stdio"
-    }
-  }
-}
-```
-
-## Testing
-
-Check the `mcp-proxy` server by running it with the `mcp-server-fetch` server. You can use
-the [inspector tool](https://modelcontextprotocol.io/docs/tools/inspector) to test the target server.
-
-```bash
-# Run the stdio server called mcp-server-fetch behind the proxy over SSE
-mcp-proxy --port=8080 uvx mcp-server-fetch &
-
-# Connect to the SSE proxy server spawned above using another instance of mcp-proxy given the URL of the SSE server
-mcp-proxy http://127.0.0.1:8080/sse
-
-# Send CTRL+C to stop the second server
-
-# Bring the first server to the foreground
-fg
-
-# Send CTRL+C to stop the first server
-```
+MIT. Original copyright and Git history are preserved. Upstream baseline: `701a0453487d1b28c8f9806ee4863674c70210dd`. See [ATTRIBUTION.md](ATTRIBUTION.md) for precise prior art, retained behavior and modifications. Per-call MCP policy tools already exist; this project focuses on a small bridge and independently inspectable receipts, not category novelty.

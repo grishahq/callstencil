@@ -1,0 +1,29 @@
+$ callstencil-scenarios --output <empty-directory>
+transport: Streamable HTTP client -> proxy subprocess -> stdio fixture subprocess
+baseline: python -m mcp_proxy ... -- python -m mcp_proxy.demo_server ...
+guarded:  python -m mcp_proxy.guarded --policy <policy> --audit-log <decisions> ...
+receipt = received by the fixture; all repository operations are simulated
+
+baseline allowed                receipts=1 expected=1 error=false PASS
+baseline wrong_repository       receipts=1 expected=1 error=false PASS
+baseline forbidden_label        receipts=1 expected=1 error=false PASS
+baseline hidden_direct_call     receipts=1 expected=1 error=false PASS
+baseline extra_argument         receipts=1 expected=1 error=true PASS
+baseline missing_argument       receipts=1 expected=1 error=true PASS
+baseline wrong_type             receipts=1 expected=1 error=true PASS
+baseline upstream_error         receipts=1 expected=1 error=true PASS
+guarded  allowed                receipts=1 expected=1 error=false PASS
+guarded  wrong_repository       receipts=0 expected=0 error=true PASS
+guarded  forbidden_label        receipts=0 expected=0 error=true PASS
+guarded  hidden_direct_call     receipts=0 expected=0 error=true PASS
+guarded  extra_argument         receipts=0 expected=0 error=true PASS
+guarded  missing_argument       receipts=0 expected=0 error=true PASS
+guarded  wrong_type             receipts=0 expected=0 error=true PASS
+guarded  upstream_error         receipts=1 expected=1 error=true PASS
+baseline schema_drift           receipts=1 expected=1 error=false PASS
+guarded  schema_drift           receipts=0 expected=0 error=true PASS
+baseline default_deny           receipts=1 expected=1 error=false PASS
+guarded  default_deny           receipts=0 expected=0 error=true PASS
+guarded  invalid_policy_startup receipts=0 rejected=True PASS
+
+Overall: PASS

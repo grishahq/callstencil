@@ -23,6 +23,8 @@ from starlette.responses import JSONResponse, Response
 from starlette.routing import BaseRoute, Mount, Route
 from starlette.types import Receive, Scope, Send
 
+from .audit import AuditLog
+from .policy import Policy
 from .proxy_server import create_proxy_server
 
 logger = logging.getLogger(__name__)
@@ -44,6 +46,8 @@ class MCPServerSettings:
     allow_origins: list[str] | None = None
     expose_headers: list[str] = field(default_factory=_default_expose_headers)
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    policy: Policy | None = None
+    audit: AuditLog | None = None
 
 
 # To store last activity for multiple servers if needed, though status endpoint is global for now.
@@ -252,7 +256,7 @@ async def run_mcp_server(
                 stdio_exit.client(default_server_params, "default"),
             )
             session = await stack.enter_async_context(ClientSession(*stdio_streams))
-            proxy = await create_proxy_server(session)
+            proxy = await create_proxy_server(session, policy=mcp_settings.policy, audit=mcp_settings.audit)
 
             instance_routes, http_manager = create_single_instance_routes(
                 proxy,
@@ -272,7 +276,7 @@ async def run_mcp_server(
             )
             stdio_streams_named = await stack.enter_async_context(stdio_exit.client(params, name))
             session_named = await stack.enter_async_context(ClientSession(*stdio_streams_named))
-            proxy_named = await create_proxy_server(session_named)
+            proxy_named = await create_proxy_server(session_named, policy=mcp_settings.policy, audit=mcp_settings.audit)
 
             instance_routes_named, http_manager_named = create_single_instance_routes(
                 proxy_named,

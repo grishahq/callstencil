@@ -1,0 +1,3 @@
+WARNING:client:Tool delete_repository not listed by server, cannot validate any structured content
+PASS: 11 scenarios; baseline receipts=10; guarded receipts=2
+Report: /Users/g/Documents/Projects/OPEN_SOURCE/callstencil/evidence/demo/report.html

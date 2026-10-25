@@ -1,0 +1,8 @@
+{"allowed": true, "reason": "allowed", "rule_id": "demo-issue", "schema_sha256": "f53ad833f363cc7d4edc7607d5e08145c94bbff0ef3418cb22ff35f284cc23fe", "tool": "create_issue"}
+{"allowed": false, "reason": "argument_constraint_mismatch", "rule_id": "demo-issue", "schema_sha256": "f53ad833f363cc7d4edc7607d5e08145c94bbff0ef3418cb22ff35f284cc23fe", "tool": "create_issue"}
+{"allowed": false, "reason": "argument_constraint_mismatch", "rule_id": "demo-issue", "schema_sha256": "f53ad833f363cc7d4edc7607d5e08145c94bbff0ef3418cb22ff35f284cc23fe", "tool": "create_issue"}
+{"allowed": false, "reason": "tool_not_allowed", "rule_id": null, "schema_sha256": null, "tool": null}
+{"allowed": false, "reason": "invalid_arguments", "rule_id": "demo-issue", "schema_sha256": "f53ad833f363cc7d4edc7607d5e08145c94bbff0ef3418cb22ff35f284cc23fe", "tool": "create_issue"}
+{"allowed": false, "reason": "invalid_arguments", "rule_id": "demo-issue", "schema_sha256": "f53ad833f363cc7d4edc7607d5e08145c94bbff0ef3418cb22ff35f284cc23fe", "tool": "create_issue"}
+{"allowed": false, "reason": "invalid_arguments", "rule_id": "demo-issue", "schema_sha256": "f53ad833f363cc7d4edc7607d5e08145c94bbff0ef3418cb22ff35f284cc23fe", "tool": "create_issue"}
+{"allowed": true, "reason": "allowed", "rule_id": "demo-issue", "schema_sha256": "f53ad833f363cc7d4edc7607d5e08145c94bbff0ef3418cb22ff35f284cc23fe", "tool": "create_issue"}

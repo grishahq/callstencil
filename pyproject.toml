@@ -1,12 +1,13 @@
 [project]
-name = "mcp-proxy"
-description = "A MCP server which proxies requests to a remote MCP server over streamable HTTP or SSE."
+name = "callstencil"
+description = "An attributed MCP transport bridge with explicit per-call policies and receipt-based scenarios."
 authors = [{ name = "Sergey Parfenyuk", email = "sergey.parfenyuk@gmail.com" }]
+maintainers = [{ name = "grishahq" }]
 license = "MIT"
-license-files = ["LICENSE"]
+license-files = ["LICENSE", "ATTRIBUTION.md"]
 readme = "README.md"
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
@@ -26,23 +27,26 @@ classifiers = [
     "Topic :: Utilities",
     "Typing :: Typed",
 ]
-version = "0.13.0"
+version = "0.1.0"
 requires-python = ">=3.10"
-dependencies = ["httpx-auth>=0.23.1", "mcp>=1.27.1,<2", "uvicorn>=0.47.0"]
+dependencies = ["httpx-auth>=0.23.1", "mcp>=1.27.1,<2", "uvicorn>=0.47.0", "jsonschema>=4.26,<5"]
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.urls]
-Homepage = "https://github.com/sparfenyuk/mcp-proxy"
-Source = "https://github.com/sparfenyuk/mcp-proxy"
-Documentation = "https://github.com/sparfenyuk/mcp-proxy"
-Changelog = "https://github.com/sparfenyuk/mcp-proxy/releases"
+Homepage = "https://github.com/grishahq/callstencil"
+Source = "https://github.com/grishahq/callstencil"
+Documentation = "https://github.com/grishahq/callstencil"
+Changelog = "https://github.com/grishahq/callstencil/releases"
 
 [project.scripts]
+callstencil = "mcp_proxy.guarded:main"
+callstencil-demo-server = "mcp_proxy.demo_server:main"
+callstencil-scenarios = "mcp_proxy.scenarios:main"
 mcp-proxy = "mcp_proxy.__main__:main"
-mcp-reverse-proxy = "mcp_proxy.__main__:client"
+mcp-reverse-proxy = "mcp_proxy.__main__:main"
 
 [tool.setuptools.package-data]
 "*" = ["py.typed"]

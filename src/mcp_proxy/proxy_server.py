@@ -4,16 +4,22 @@ This server is created independent of any transport mechanism.
 """
 
 import logging
+import json
 import typing as t
 
 from mcp import server, types
 from mcp.client.session import ClientSession
 from mcp.server.lowlevel.server import request_ctx
 
+from .audit import AuditLog
+from .policy import Policy
+
 logger = logging.getLogger(__name__)
 
 
-async def create_proxy_server(remote_app: ClientSession) -> server.Server[object]:  # noqa: C901, PLR0915
+async def create_proxy_server(
+    remote_app: ClientSession, *, policy: Policy | None = None, audit: AuditLog | None = None
+) -> server.Server[object]:  # noqa: C901, PLR0915
     """Create a server instance from a remote app."""
     logger.debug("Sending initialization request to remote MCP server...")
     response = await remote_app.initialize()
@@ -95,14 +101,58 @@ async def create_proxy_server(remote_app: ClientSession) -> server.Server[object
             tools = await remote_app.list_tools(
                 params=req.params if req is not None else None,
             )
+            if policy is not None:
+                tools.tools = [tool for tool in tools.tools if policy.visible(tool.name)]
             return types.ServerResult(tools)
 
         app.request_handlers[types.ListToolsRequest] = _list_tools
 
         async def _call_tool(req: types.CallToolRequest) -> types.ServerResult:
             try:
+                if policy is not None:
+                    # Resolve fresh schemas for every call, including direct calls that
+                    # never appeared in discovery. All pages count; duplicates deny.
+                    schemas: dict[str, t.Any] = {}
+                    cursor: str | None = None
+                    seen_cursors: set[str] = set()
+                    try:
+                        while True:
+                            page = await remote_app.list_tools(cursor=cursor)
+                            for tool in page.tools:
+                                if tool.name in schemas:
+                                    raise ValueError("ambiguous tool schema")
+                                schemas[tool.name] = tool.inputSchema
+                            cursor = page.nextCursor
+                            if cursor is None:
+                                break
+                            if cursor in seen_cursors or len(seen_cursors) >= 100:
+                                raise ValueError("invalid schema pagination")
+                            seen_cursors.add(cursor)
+                        decision = policy.evaluate(
+                            req.params.name, req.params.arguments if req.params.arguments is not None else {}, schemas.get(req.params.name)
+                        )
+                        record = decision.as_dict()
+                    except Exception:
+                        record = {"allowed": False, "reason": "schema_unavailable"}
+                    try:
+                        if audit is not None:
+                            audit.write(record)
+                    except Exception:
+                        return types.ServerResult(types.CallToolResult(
+                            content=[types.TextContent(type="text", text="CallStencil denied: audit_unavailable")],
+                            isError=True,
+                        ))
+                    if not record["allowed"]:
+                        return types.ServerResult(types.CallToolResult(
+                            content=[types.TextContent(type="text", text="CallStencil denied: " + str(record["reason"]))],
+                            isError=True,
+                        ))
                 # Convert meta to dict if present (required for TypedDict compatibility)
                 meta_dict = dict(req.params.meta) if req.params.meta else None
+                if policy is not None and meta_dict is not None:
+                    # Arbitrary metadata can influence server behavior. Only the
+                    # protocol progress token survives the guarded boundary.
+                    meta_dict = {k: v for k, v in meta_dict.items() if k == "progressToken" and v is not None}
 
                 # Only set up progress forwarding if progressToken is present
                 progress_token = meta_dict.get("progressToken") if meta_dict else None
@@ -141,7 +191,7 @@ async def create_proxy_server(remote_app: ClientSession) -> server.Server[object
             except Exception as e:  # noqa: BLE001
                 return types.ServerResult(
                     types.CallToolResult(
-                        content=[types.TextContent(type="text", text=str(e))],
+                        content=[types.TextContent(type="text", text="CallStencil upstream call failed" if policy is not None else str(e))],
                         isError=True,
                     ),
                 )

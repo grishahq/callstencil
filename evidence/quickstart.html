@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>CallStencil clean wheel quickstart</title>
+<style>body{margin:0;padding:70px;background:#0c1423;color:#edf3fd;font:23px/1.6 system-ui}h1{font-size:54px;line-height:1.1;margin:24px 0}p{color:#afc0d8}small{color:#66dfb2;letter-spacing:.1em}pre{font:22px/1.7 ui-monospace,monospace;background:#16243a;border-radius:20px;padding:35px;white-space:pre-wrap}.pass{color:#66dfb2}</style>
+<small>CALLSTENCIL · OBSERVED CLEAN INSTALL</small><h1>Install. Run. Inspect receipts.</h1><p>GitHub wheel · Python 3.11 · no model key required</p>
+<pre>$ uv venv .clean
+$ uv pip install --python .clean/bin/python \
+    ./callstencil-0.1.0-py3-none-any.whl
+$ .clean/bin/callstencil --version
+callstencil 0.1.0
+$ .clean/bin/callstencil-scenarios --output .clean/demo
+<span class="pass">PASS: 11 scenarios; baseline receipts=10; guarded receipts=2</span></pre>
+<p>Open the generated report.html, report.json and receipts.jsonl.<br>All issue operations are controlled fixtures. No GitHub account is touched.</p>
+<p style="font-size:20px">Public alpha · attributed fork of sparfenyuk/mcp-proxy · MIT</p></html>

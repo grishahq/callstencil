@@ -1,0 +1,2 @@
+{"outcome": "simulated_only", "sequence": 1, "tool": "create_issue"}
+{"outcome": "upstream_error", "sequence": 2, "tool": "create_issue"}

@@ -1,0 +1,309 @@
+{
+  "format_version": 1,
+  "suite": "callstencil-fixed-offline-demo",
+  "transport": "streamable-http-to-stdio",
+  "receipt_semantics": "Forwarded call received; no real repository mutation",
+  "passed": true,
+  "baseline_receipts": 10,
+  "guarded_receipts": 2,
+  "blocked_calls": 8,
+  "scenarios": [
+    {
+      "id": "allowed",
+      "description": "Approved issue",
+      "observations": [
+        {
+          "id": "allowed",
+          "description": "Approved issue",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": false,
+          "expected_error": false,
+          "passed": true,
+          "tool_advertised": true
+        },
+        {
+          "id": "allowed",
+          "description": "Approved issue",
+          "mode": "guarded",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": false,
+          "expected_error": false,
+          "passed": true,
+          "tool_advertised": true
+        }
+      ]
+    },
+    {
+      "id": "wrong_repository",
+      "description": "Repository outside the rule",
+      "observations": [
+        {
+          "id": "wrong_repository",
+          "description": "Repository outside the rule",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": false,
+          "expected_error": false,
+          "passed": true,
+          "tool_advertised": true
+        },
+        {
+          "id": "wrong_repository",
+          "description": "Repository outside the rule",
+          "mode": "guarded",
+          "receipt_delta": 0,
+          "expected_receipt_delta": 0,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        }
+      ]
+    },
+    {
+      "id": "forbidden_label",
+      "description": "Label outside the allowed set",
+      "observations": [
+        {
+          "id": "forbidden_label",
+          "description": "Label outside the allowed set",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": false,
+          "expected_error": false,
+          "passed": true,
+          "tool_advertised": true
+        },
+        {
+          "id": "forbidden_label",
+          "description": "Label outside the allowed set",
+          "mode": "guarded",
+          "receipt_delta": 0,
+          "expected_receipt_delta": 0,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        }
+      ]
+    },
+    {
+      "id": "hidden_direct_call",
+      "description": "Direct call to an unadvertised destructive-name fixture",
+      "observations": [
+        {
+          "id": "hidden_direct_call",
+          "description": "Direct call to an unadvertised destructive-name fixture",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": false,
+          "expected_error": false,
+          "passed": true,
+          "tool_advertised": false
+        },
+        {
+          "id": "hidden_direct_call",
+          "description": "Direct call to an unadvertised destructive-name fixture",
+          "mode": "guarded",
+          "receipt_delta": 0,
+          "expected_receipt_delta": 0,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": false
+        }
+      ]
+    },
+    {
+      "id": "extra_argument",
+      "description": "Unexpected argument",
+      "observations": [
+        {
+          "id": "extra_argument",
+          "description": "Unexpected argument",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        },
+        {
+          "id": "extra_argument",
+          "description": "Unexpected argument",
+          "mode": "guarded",
+          "receipt_delta": 0,
+          "expected_receipt_delta": 0,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        }
+      ]
+    },
+    {
+      "id": "missing_argument",
+      "description": "Required title omitted",
+      "observations": [
+        {
+          "id": "missing_argument",
+          "description": "Required title omitted",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        },
+        {
+          "id": "missing_argument",
+          "description": "Required title omitted",
+          "mode": "guarded",
+          "receipt_delta": 0,
+          "expected_receipt_delta": 0,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        }
+      ]
+    },
+    {
+      "id": "wrong_type",
+      "description": "Labels supplied as a string",
+      "observations": [
+        {
+          "id": "wrong_type",
+          "description": "Labels supplied as a string",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        },
+        {
+          "id": "wrong_type",
+          "description": "Labels supplied as a string",
+          "mode": "guarded",
+          "receipt_delta": 0,
+          "expected_receipt_delta": 0,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        }
+      ]
+    },
+    {
+      "id": "upstream_error",
+      "description": "Allowed call returning a fixture error",
+      "observations": [
+        {
+          "id": "upstream_error",
+          "description": "Allowed call returning a fixture error",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        },
+        {
+          "id": "upstream_error",
+          "description": "Allowed call returning a fixture error",
+          "mode": "guarded",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        }
+      ]
+    },
+    {
+      "id": "schema_drift",
+      "description": "Pinned schema differs after server restart",
+      "observations": [
+        {
+          "id": "schema_drift",
+          "description": "Pinned schema differs after server restart",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": false,
+          "expected_error": false,
+          "passed": true,
+          "tool_advertised": true
+        },
+        {
+          "id": "schema_drift",
+          "description": "Pinned schema differs after server restart",
+          "mode": "guarded",
+          "receipt_delta": 0,
+          "expected_receipt_delta": 0,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": true
+        }
+      ]
+    },
+    {
+      "id": "default_deny",
+      "description": "Empty rules deny a known tool",
+      "observations": [
+        {
+          "id": "default_deny",
+          "description": "Empty rules deny a known tool",
+          "mode": "baseline",
+          "receipt_delta": 1,
+          "expected_receipt_delta": 1,
+          "is_error": false,
+          "expected_error": false,
+          "passed": true,
+          "tool_advertised": true
+        },
+        {
+          "id": "default_deny",
+          "description": "Empty rules deny a known tool",
+          "mode": "guarded",
+          "receipt_delta": 0,
+          "expected_receipt_delta": 0,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": false
+        }
+      ]
+    },
+    {
+      "id": "invalid_policy_startup",
+      "description": "Unknown policy field fails startup",
+      "observations": [
+        {
+          "id": "invalid_policy_startup",
+          "description": "Unknown policy field fails startup",
+          "mode": "guarded",
+          "receipt_delta": 0,
+          "expected_receipt_delta": 0,
+          "is_error": true,
+          "expected_error": true,
+          "passed": true,
+          "tool_advertised": false
+        }
+      ]
+    }
+  ]
+}

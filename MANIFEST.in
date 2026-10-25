@@ -1,0 +1,7 @@
+include ATTRIBUTION.md CHANGELOG.md PLAN.md STATUS.json uv.lock
+include Dockerfile
+recursive-include docs *.md *.yaml
+recursive-include examples *.md *.json
+recursive-include evidence *.json *.jsonl *.txt *.html
+recursive-include campaign *.json *.md *.py *.png
+recursive-include scripts *.py *.cjs

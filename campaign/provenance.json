@@ -1,0 +1,116 @@
+{
+  "format_version": 1,
+  "recorded_on": "2026-10-25",
+  "language": "en",
+  "policy": "Original conceptual artwork is labeled as such. Software captures and chart use the actual fixture/report; no generated UI or fabricated metrics. Asset SHA-256 and dimensions are refreshed only after inspection.",
+  "assets": [
+    {
+      "path": "assets/connection-is-not-permission.png",
+      "kind": "generated_concept",
+      "generator": "OpenAI built-in image_gen.imagegen",
+      "model": "gpt-image tool (exact backend model identifier not returned)",
+      "original": true,
+      "reference_images": false,
+      "prompt_language": "en",
+      "prompt": "Use case: ads-marketing. Asset: original English conceptual campaign illustration for CallStencil, an MCP bridge with permissions you can test. Editorial technical illustration, warm ivory paper background, deep navy and teal, precise cut-paper dimensional stencil gate. Several abstract cards approach the stencil bridge: one matching card passes through, mismatched cards remain before the gate. Clearly a conceptual illustration, no fake app UI, no charts, no numbers, no testimonials, no logos from other brands. Elegant restrained developer publication aesthetic with plenty of whitespace. Exact text only: 'CallStencil' and 'Connection is not permission'. Landscape 1536x1024 composition, large readable English type.",
+      "visible_text": [
+        "CallStencil",
+        "Connection is not permission."
+      ],
+      "inspection": {
+        "status": "passed",
+        "method": "view_image visual inspection",
+        "date": "2026-10-25",
+        "result": "English text legible and accurate; final period added after permission. Clearly conceptual stencil/card artwork, no fake product screenshot or metric."
+      },
+      "sha256": "24118d1e608a94cd97c2e9c918bdc209794f6e0eac74461948f1700df2d019d0",
+      "dimensions_px": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "path": "assets/test-the-boundary.png",
+      "kind": "generated_concept",
+      "generator": "OpenAI built-in image_gen.imagegen",
+      "model": "gpt-image tool (exact backend model identifier not returned)",
+      "original": true,
+      "reference_images": false,
+      "prompt_language": "en",
+      "prompt": "Use case: ads-marketing. Asset: second original English conceptual campaign illustration for CallStencil, permissions testable per tool call. Editorial technical illustration matching an ivory-paper, navy-and-teal visual direction. A meticulous engineering workbench with a stencil aperture, a matching teal card, rejected coral cards, and a receipt roll recording small abstract check marks. Show inspection and explicit boundaries rather than total security. Premium cut-paper dimensional illustration, wide balanced composition, clear negative space. Exact English text only: 'CallStencil' and 'Test the boundary'. No UI screenshot, no metric chart, no numbers, no claims of complete protection, no other brands, no watermark. Landscape 1536x1024.",
+      "visible_text": [
+        "CallStencil",
+        "Test the boundary"
+      ],
+      "inspection": {
+        "status": "passed",
+        "method": "view_image visual inspection",
+        "date": "2026-10-25",
+        "result": "English text legible and accurate; conceptual workbench with stencil, cards and receipt, no false software UI or metrics."
+      },
+      "sha256": "c075241e7b5eb3a5961aa335423dfce64443038d64ebff2de0912dadd979afa2",
+      "dimensions_px": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "path": "assets/demo-report.png",
+      "kind": "software_capture",
+      "generator": "Real browser screenshot via scripts/render_evidence.cjs",
+      "source_references": [
+        "../evidence/demo/report.html",
+        "../evidence/demo/report.json",
+        "../scripts/render_evidence.cjs"
+      ],
+      "inspection": {
+        "status": "passed",
+        "method": "view_image visual inspection and generation-script source review",
+        "date": "2026-10-25",
+        "result": "Actual report browser capture; all eleven scenario rows legible, 10 baseline / 2 guarded / 8 blocked totals match JSON. Transcript begins below table and is partly below capture, not used as a complete transcript image."
+      },
+      "sha256": "9b4970023d2034e019252f6d9a1a9efc262b92c60115b6546dbb3df93ade6dff",
+      "dimensions_px": [
+        1280,
+        1620
+      ]
+    },
+    {
+      "path": "assets/receipts-comparison.png",
+      "kind": "data_visualization",
+      "generator": "scripts/plot_receipts.py",
+      "source_references": [
+        "../evidence/demo/report.json",
+        "../scripts/plot_receipts.py"
+      ],
+      "data": {
+        "baseline_receipts": 10,
+        "guarded_receipts": 2,
+        "blocked_call_attempts": 8
+      },
+      "measurement": "Fixture arrival before argument validation; no real repository mutation",
+      "inspection": {
+        "status": "passed",
+        "method": "view_image visual inspection and plot-script source review",
+        "date": "2026-10-25",
+        "result": "Ten paired scenarios plotted directly from report receipt deltas. Labels and bars legible, 1/0 receipt values accurate, allowed fixture error correctly arrives. Footer states controlled-fixture and startup limits."
+      },
+      "sha256": "49f767f2c3599bdd350cde458afb234a9aca43fd0a1b85f38a046cc1ded31a4e",
+      "dimensions_px": [
+        1960,
+        1260
+      ]
+    },
+    {
+      "path": "assets/release-quickstart.png",
+      "kind": "software_capture",
+      "generator": "Actual clean downloaded-release wheel installation and scenario output",
+      "source_references": [
+        "../README.md"
+      ],
+      "inspection": {
+        "status": "pending_release_readback_clean_install_and_visual_review"
+      }
+    }
+  ]
+}

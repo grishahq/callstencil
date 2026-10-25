@@ -73,9 +73,12 @@ def _setup_argument_parser() -> argparse.ArgumentParser:
 def _add_arguments_to_parser(parser: argparse.ArgumentParser) -> None:
     """Add all arguments to the argument parser."""
     try:
-        package_version = version("mcp-proxy")
+        package_version = version("callstencil")
     except Exception:  # noqa: BLE001
         package_version = "unknown"
+
+    parser.add_argument("--policy", help="Version 1 CallStencil JSON policy (stdio-to-HTTP/SSE only)")
+    parser.add_argument("--audit-log", help="Append redacted decision JSONL; write failure denies the call")
 
     parser.add_argument(
         "--version",
@@ -472,11 +475,29 @@ def _create_mcp_settings(args_parsed: argparse.Namespace) -> MCPServerSettings:
     )
 
 
-def main() -> None:
+def main(*, require_policy: bool = False) -> None:
     """Start the client using asyncio."""
     parser = _setup_argument_parser()
     args_parsed = parser.parse_args()
     logger = _setup_logging(level=args_parsed.log_level, debug=args_parsed.debug)
+    if require_policy and not args_parsed.policy:
+        parser.error("callstencil requires --policy; use mcp-proxy for the unguarded compatibility bridge")
+    if args_parsed.audit_log and not args_parsed.policy:
+        parser.error("--audit-log requires --policy")
+    if args_parsed.policy:
+        if args_parsed.command_or_url and args_parsed.command_or_url.startswith(("http://", "https://")):
+            parser.error("policy enforcement supports stdio-to-HTTP/SSE mode only in v0.1")
+        if require_policy and (args_parsed.named_server_definitions or args_parsed.named_server_config):
+            parser.error("callstencil v0.1 supports one controlled stdio server per process")
+        from .audit import AuditLog
+        from .policy import Policy
+        try:
+            policy = Policy.load(args_parsed.policy)
+            audit = AuditLog(args_parsed.audit_log) if args_parsed.audit_log else None
+        except Exception:
+            parser.error("invalid policy or unavailable audit log; configuration values omitted")
+    else:
+        policy, audit = None, None
 
     # Validate required arguments
     if (
@@ -539,6 +560,8 @@ def main() -> None:
 
     # Create MCP server settings and run the server
     mcp_settings = _create_mcp_settings(args_parsed)
+    mcp_settings.policy = policy
+    mcp_settings.audit = audit
     asyncio.run(
         run_mcp_server(
             default_server_params=default_stdio_params,

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>CallStencil | Offline transport evidence</title>
+<style>
+:root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;background:#0c1423;color:#edf3fd}
+body{max-width:1100px;margin:auto;padding:48px 28px}h1{font-size:46px;line-height:1.1;margin:12px 0}
+h2{font-size:22px;margin-top:40px}p{color:#afc0d8;max-width:850px}.eyebrow{color:#66dfb2;letter-spacing:.13em;font-size:12px;font-weight:700}
+.metrics{display:flex;gap:16px;margin:30px 0;flex-wrap:wrap}.metric{background:#16243a;padding:20px 26px;border-radius:12px;flex:1;min-width:160px}
+.metric strong{display:block;font-size:34px}.metric span{font-size:13px;color:#afc0d8}table{width:100%;border-collapse:collapse;background:#111e31;border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:14px 18px;border-bottom:1px solid #26354b}th{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:#afc0d8}
+td:first-child{width:60%}small{display:block;color:#afc0d8;font-size:12px;margin-top:3px}.pass{color:#66dfb2;font-weight:700}.fail{color:#ff9b9b;font-weight:700}
+pre{background:#070e18;border:1px solid #26354b;border-radius:12px;padding:24px;overflow:auto;font:12px/1.8 ui-monospace,monospace}
+.note{font-size:13px;border-left:3px solid #6d9afa;padding-left:16px}a{color:#98b9ff}
+</style><main><div class="eyebrow">CALLSTENCIL · REAL TRANSPORT EVIDENCE</div>
+<h1>Calls checked.<br>Forwarding measured.</h1>
+<p>A fixed, offline comparison of the compatibility bridge and the guarded bridge.
+Each call traverses a Streamable HTTP client, a proxy subprocess, and a stdio issue-server subprocess.</p>
+<div class="metrics"><div class="metric"><strong class="pass">PASS</strong><span>Independent expectations</span></div>
+<div class="metric"><strong>10</strong><span>Baseline server receipts</span></div>
+<div class="metric"><strong>2</strong><span>Guarded server receipts</span></div>
+<div class="metric"><strong>8</strong><span>Calls blocked before forwarding</span></div></div>
+<p class="note">Receipts prove that the controlled server received a call. All operations are simulated;
+no repository is created, changed, or deleted. Baseline malformed calls reach the fixture and then fail
+its schema validation. Guarded denials must return an error and produce zero server receipts.</p>
+<h2>Scenario results</h2><table><thead><tr><th>Scenario</th><th>Baseline receipts</th><th>Guarded receipts</th><th>Check</th></tr></thead>
+<tbody><tr><td><strong>allowed</strong><small>Approved issue</small></td><td>1</td><td>1</td><td class="pass">PASS</td></tr><tr><td><strong>wrong_repository</strong><small>Repository outside the rule</small></td><td>1</td><td>0</td><td class="pass">PASS</td></tr><tr><td><strong>forbidden_label</strong><small>Label outside the allowed set</small></td><td>1</td><td>0</td><td class="pass">PASS</td></tr><tr><td><strong>hidden_direct_call</strong><small>Direct call to an unadvertised destructive-name fixture</small></td><td>1</td><td>0</td><td class="pass">PASS</td></tr><tr><td><strong>extra_argument</strong><small>Unexpected argument</small></td><td>1</td><td>0</td><td class="pass">PASS</td></tr><tr><td><strong>missing_argument</strong><small>Required title omitted</small></td><td>1</td><td>0</td><td class="pass">PASS</td></tr><tr><td><strong>wrong_type</strong><small>Labels supplied as a string</small></td><td>1</td><td>0</td><td class="pass">PASS</td></tr><tr><td><strong>upstream_error</strong><small>Allowed call returning a fixture error</small></td><td>1</td><td>1</td><td class="pass">PASS</td></tr><tr><td><strong>schema_drift</strong><small>Pinned schema differs after server restart</small></td><td>1</td><td>0</td><td class="pass">PASS</td></tr><tr><td><strong>default_deny</strong><small>Empty rules deny a known tool</small></td><td>1</td><td>0</td><td class="pass">PASS</td></tr><tr><td><strong>invalid_policy_startup</strong><small>Unknown policy field fails startup</small></td><td>—</td><td>0</td><td class="pass">PASS</td></tr></tbody></table>
+<h2>Observed terminal transcript</h2><pre>$ callstencil-scenarios --output &lt;empty-directory&gt;
+transport: Streamable HTTP client -&gt; proxy subprocess -&gt; stdio fixture subprocess
+baseline: python -m mcp_proxy ... -- python -m mcp_proxy.demo_server ...
+guarded:  python -m mcp_proxy.guarded --policy &lt;policy&gt; --audit-log &lt;decisions&gt; ...
+receipt = received by the fixture; all repository operations are simulated
+
+baseline allowed                receipts=1 expected=1 error=false PASS
+baseline wrong_repository       receipts=1 expected=1 error=false PASS
+baseline forbidden_label        receipts=1 expected=1 error=false PASS
+baseline hidden_direct_call     receipts=1 expected=1 error=false PASS
+baseline extra_argument         receipts=1 expected=1 error=true PASS
+baseline missing_argument       receipts=1 expected=1 error=true PASS
+baseline wrong_type             receipts=1 expected=1 error=true PASS
+baseline upstream_error         receipts=1 expected=1 error=true PASS
+guarded  allowed                receipts=1 expected=1 error=false PASS
+guarded  wrong_repository       receipts=0 expected=0 error=true PASS
+guarded  forbidden_label        receipts=0 expected=0 error=true PASS
+guarded  hidden_direct_call     receipts=0 expected=0 error=true PASS
+guarded  extra_argument         receipts=0 expected=0 error=true PASS
+guarded  missing_argument       receipts=0 expected=0 error=true PASS
+guarded  wrong_type             receipts=0 expected=0 error=true PASS
+guarded  upstream_error         receipts=1 expected=1 error=true PASS
+baseline schema_drift           receipts=1 expected=1 error=false PASS
+guarded  schema_drift           receipts=0 expected=0 error=true PASS
+baseline default_deny           receipts=1 expected=1 error=false PASS
+guarded  default_deny           receipts=0 expected=0 error=true PASS
+guarded  invalid_policy_startup receipts=0 rejected=True PASS
+
+Overall: PASS
+</pre>
+<p class="note">The upstream error is allowed through and remains an error. Schema drift uses a new
+server process with a changed input schema. The hidden direct call is deliberately absent from
+discovery. Invalid-policy startup is tested separately and has no baseline call.</p>
+<p>Artifacts: <a href="report.json">report.json</a> · <a href="transcript.txt">transcript.txt</a> ·
+<a href="receipts.jsonl">redacted server receipts</a> · <a href="decisions.jsonl">redacted policy decisions</a></p>
+</main></html>

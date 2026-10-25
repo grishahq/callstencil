@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-25",
+  "timezone": "Asia/Dubai",
+  "linkedin": {
+    "authenticated": true,
+    "account": "Gregory Gvadzabia",
+    "profile": "https://www.linkedin.com/in/gregogv/",
+    "scheduling_control_observed": true,
+    "existing_scheduled_count": 1
+  },
+  "x": {
+    "authenticated": true,
+    "account": "@grishahq",
+    "scheduling_control_observed": true,
+    "existing_occupied_time": "2026-10-26T03:14:00+04:00",
+    "existing_scheduled_count": 1
+  },
+  "mutations": "No content entered or scheduled; no slots reserved."
+}

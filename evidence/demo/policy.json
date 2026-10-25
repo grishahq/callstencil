@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "demo-issue",
+      "tool": "create_issue",
+      "input_schema_sha256": "f53ad833f363cc7d4edc7607d5e08145c94bbff0ef3418cb22ff35f284cc23fe",
+      "arguments": {
+        "repository": {
+          "equals": "grishahq/demo"
+        },
+        "labels": {
+          "items_in": [
+            "bug",
+            "docs"
+          ]
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}
