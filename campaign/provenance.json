@@ -104,13 +104,24 @@
     {
       "path": "assets/release-quickstart.png",
       "kind": "software_capture",
-      "generator": "Actual clean downloaded-release wheel installation and scenario output",
+      "generator": "Browser rendering of observed clean-install output via scripts/render_evidence.cjs; not an operating-system terminal screenshot",
       "source_references": [
+        "../evidence/quickstart.html",
+        "../evidence/clean-install.txt",
+        "../scripts/render_evidence.cjs",
         "../README.md"
       ],
       "inspection": {
-        "status": "pending_release_readback_clean_install_and_visual_review"
-      }
+        "status": "passed",
+        "method": "view_image visual inspection and source/transcript review; root independently inspected",
+        "date": "2026-10-25",
+        "result": "Legible HTML rendering of actual clean local wheel install and scenario output. Version 0.1.0 and 11 scenarios / 10 baseline receipts / 2 guarded receipts agree with transcript. This is rendered observed output, not an OS terminal screenshot; public release readback is tracked separately."
+      },
+      "sha256": "b55d818a33a7bd19163c35f3c8feb191e8b7613f854a1c0aa8c66bfbb2770a2b",
+      "dimensions_px": [
+        1280,
+        1000
+      ]
     }
   ]
 }

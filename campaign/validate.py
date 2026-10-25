@@ -12,6 +12,7 @@ import hashlib
 import json
 import re
 import struct
+from datetime import datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -39,12 +40,15 @@ def png_size(path: Path) -> tuple[int, int]:
 
 
 def render(data: dict) -> str:
+    items = [item for beat in data["beats"] for item in beat["platform_items"].values()]
+    scheduled_count = sum(item["scheduled"] for item in items)
+    published_count = sum(item["published"] for item in items)
     lines = [
         "# CallStencil engineering campaign",
         "",
         "Derived from `campaign.json`; edit that canonical file and run `python3 campaign/validate.py --render`.",
         "",
-        f"Prepared: {data['prepared']}. Scheduled: {data['scheduled']}. Published: {data['published']}.",
+        f"Prepared: {sum(item['prepared'] for item in items)}/{len(items)}. Scheduled: {scheduled_count}/{len(items)}. Published: {published_count}/{len(items)}.",
         f"Release claims: {data['release_claim_status']}. Ready for scheduling: {data['ready_for_scheduling']}.",
         "",
         data["status_note"],
@@ -53,7 +57,7 @@ def render(data: dict) -> str:
         "",
         data["attribution"],
         "",
-        "Posting order: problem → design tradeoff → reproducible demo → fair experiment → release quickstart. No account, queue, date or schedule has been assigned.",
+        "Posting order: problem → design tradeoff → reproducible demo → fair experiment → release quickstart. Per-platform schedule and publication metadata below reflect verified records only.",
         "",
     ]
     for beat in data["beats"]:
@@ -67,12 +71,41 @@ def render(data: dict) -> str:
             f"Alt text: {beat['alt_text']}", "",
             f"![{beat['alt_text']}]({beat['image']})", "",
             f"### LinkedIn — {len(beat['linkedin'])} characters", "",
+            item_status(beat["platform_items"]["linkedin"]), "",
             beat["linkedin"], "",
             "### X thread", "",
+            item_status(beat["platform_items"]["x"]), "",
         ]
         for index, post in enumerate(beat["x_thread"], 1):
             lines += [f"Post {index} — {x_length(post)} weighted characters", "", post, ""]
     return "\n".join(lines).rstrip() + "\n"
+
+
+def item_status(item: dict) -> str:
+    line = f"Item `{item['id']}`. Prepared: {item['prepared']}. Scheduled: {item['scheduled']}. Published: {item['published']}."
+    if item["scheduled"]:
+        record = item["schedule"]
+        line += f" Account: {record['account']}; scheduled for {record['scheduled_for']} ({record['timezone']}); confirmation: `{record['evidence_path']}`."
+    if item["published"]:
+        record = item["publication"]
+        line += f" Published at {record['published_at']}; URL: {record['url']}; readback: `{record['evidence_path']}`."
+    return line
+
+
+def check_item_state(item: dict) -> None:
+    assert item["prepared"] is True
+    assert isinstance(item["scheduled"], bool) and isinstance(item["published"], bool)
+    if item["scheduled"]:
+        record = item["schedule"]
+        for key in ("account", "scheduled_for", "timezone", "evidence_path"):
+            assert record[key].strip(), f"Missing schedule {key}: {item['id']}"
+        assert datetime.fromisoformat(record["scheduled_for"]).utcoffset() is not None, "Schedule requires explicit UTC offset"
+        source_path(record["evidence_path"])
+    if item["published"]:
+        record = item["publication"]
+        assert datetime.fromisoformat(record["published_at"]).utcoffset() is not None
+        assert record["url"].startswith("https://")
+        source_path(record["evidence_path"])
 
 
 def main() -> None:
@@ -86,9 +119,12 @@ def main() -> None:
     provenance_path = HERE / "provenance.json"
     provenance = json.loads(provenance_path.read_text())
     assert data["language"] == "en"
-    assert data["prepared"] is True and data["scheduled"] is False and data["published"] is False
+    assert data["prepared"] is True
     assert len(data["beats"]) == 5
     assert len({b["id"] for b in data["beats"]}) == 5
+    items = [item for beat in data["beats"] for item in beat["platform_items"].values()]
+    assert data["scheduled"] == any(item["scheduled"] for item in items), "Top-level scheduled flag must reflect actual platform records"
+    assert data["published"] == any(item["published"] for item in items), "Top-level published flag must reflect actual platform records"
     report = json.loads(source_path(data["evidence_snapshot"]["path"]).read_text())
     snapshot = data["evidence_snapshot"]
     for key in ("passed", "baseline_receipts", "guarded_receipts", "blocked_calls"):
@@ -114,7 +150,7 @@ def main() -> None:
             source_path(reference)
         assert set(beat["platform_items"]) == {"linkedin", "x"}
         for platform in beat["platform_items"].values():
-            assert platform["prepared"] is True and platform["scheduled"] is False and platform["published"] is False
+            check_item_state(platform)
         assert beat["image"] in assets, f"Missing provenance: {beat['image']}"
         asset = assets[beat["image"]]
         assert asset["kind"] == beat["image_kind"]
@@ -145,9 +181,20 @@ def main() -> None:
         assert data["release_claim_status"] == "verified_public_release", "Release readback remains pending"
         assert data["ready_for_scheduling"] is True
         assert data.get("release_verification"), "Missing public release verification reference"
-        source_path(data["release_verification"]["evidence_path"])
+        verification = json.loads(source_path(data["release_verification"]["evidence_path"]).read_text())
+        assert verification["anonymous_public_readback"] is True
+        assert verification["all_assets_anonymously_downloaded_and_sha256_verified"] is True
+        assert verification["release_url"] == data["release_url"]
+        assert verification["immutable"] is True and verification["prerelease"] is True
+        assert verification["tag"] == "v0.1.0"
+        release = json.loads(source_path(data["release_verification"]["api_evidence_path"]).read_text())
+        assert release["draft"] is False and release["immutable"] is True
+        assert release["html_url"] == verification["release_url"]
+        assert release["id"] == verification["release_id"]
+        assert "callstencil-0.1.0-py3-none-any.whl" in verification["asset_names"]
+        assert "SHA256SUMS" in verification["asset_names"]
     print("PASS: 5 LinkedIn posts (600–1600 chars), 5 X threads (3–5 posts, <=280 weighted chars), metadata and evidence." + (" Copy-only; missing assets were not required." if args.copy_only else " All 5 image files and provenance hashes verified."))
-    print(f"Release status: {data['release_claim_status']}. Scheduled: false. Published: false.")
+    print(f"Release status: {data['release_claim_status']}. Scheduled: {sum(item['scheduled'] for item in items)}/10. Published: {sum(item['published'] for item in items)}/10.")
     print("LinkedIn lengths: " + ", ".join(str(len(b["linkedin"])) for b in data["beats"]))
     print("X weighted lengths: " + "; ".join(",".join(str(x_length(p)) for p in b["x_thread"]) for b in data["beats"]))
 

@@ -4,10 +4,19 @@
   "plan": "complete; PLAN.md",
   "implementation": "complete; default-deny rules, schema pinning, redacted decisions, retained bridge",
   "validation": "179 tests passed; mypy clean; clean wheel scenario PASS; CI passed Python 3.10/3.11/3.13",
-  "github_release": "repository public; ready for immutable v0.1.0 alpha publication",
+  "github_release": {
+    "state": "published",
+    "url": "https://github.com/grishahq/callstencil/releases/tag/v0.1.0",
+    "immutable": true,
+    "maturity": "public alpha",
+    "tag": "v0.1.0",
+    "commit": "9c718c4962122115662501cb49bd76f1bbd8856a",
+    "public_download_hashes_verified": true,
+    "public_wheel_clean_install_passed": true
+  },
   "campaign": {
     "prepared": true,
-    "release_claims_verified": false,
+    "release_claims_verified": true,
     "scheduled": false,
     "published": false
   },
@@ -17,12 +26,12 @@
     "evidence/types.txt",
     "evidence/clean-install.txt",
     "docs/REVIEW.md",
-    "campaign/CAMPAIGN.md"
+    "campaign/CAMPAIGN.md",
+    "evidence/release-verification.json",
+    "evidence/public-install.txt"
   ],
   "blockers": [],
   "next_actions": [
-    "Publish and verify release",
-    "Finalize campaign release links",
-    "Schedule where native platforms support the requested format"
+    "Finish campaign validation and native scheduling with shared portfolio lock"
   ]
 }

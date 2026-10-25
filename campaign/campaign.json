@@ -8,9 +8,9 @@
   "prepared": true,
   "scheduled": false,
   "published": false,
-  "release_claim_status": "pending_public_release_readback",
-  "ready_for_scheduling": false,
-  "status_note": "Prepared copy only. No publishing or scheduling action has been performed. Release availability claims require public release readback.",
+  "release_claim_status": "verified_public_release",
+  "ready_for_scheduling": true,
+  "status_note": "Public immutable v0.1.0 alpha and anonymous asset downloads/checksums verified. Platform preparation, scheduling and publication states are recorded separately below; no post is marked scheduled or published without confirmation evidence.",
   "evidence_snapshot": {
     "path": "../evidence/demo/report.json",
     "passed": true,
@@ -172,22 +172,26 @@
       "name": "A quickstart that leaves evidence",
       "image": "assets/release-quickstart.png",
       "image_kind": "software_capture",
-      "alt_text": "Actual clean-install CallStencil quickstart output for v0.1.0, with the scenario command and successful evidence report generation.",
+      "alt_text": "Rendered observed clean-install output for CallStencil v0.1.0: wheel installation, version command and scenario runner, with 11 passing scenarios, 10 baseline receipts and 2 guarded receipts. This is an HTML rendering of observed output, not an operating-system terminal screenshot.",
       "audience": "Python and MCP developers evaluating the alpha",
       "hook": "A useful alpha quickstart should leave files you can inspect, not just a success message.",
       "evidence_references": [
         "../README.md",
         "../ATTRIBUTION.md",
-        "../evidence/demo/report.json"
+        "../evidence/demo/report.json",
+        "../evidence/release.json",
+        "../evidence/release-verification.json",
+        "../evidence/clean-install.txt"
       ],
-      "cta": "Follow the repository quickstart in a fresh environment and inspect the generated report.",
-      "release_claim_status": "pending_public_release_readback",
-      "linkedin": "A useful alpha quickstart should leave files you can inspect, not just a success message.\n\nCallStencil's local walkthrough ends with an HTML report, JSON observations, server receipts, decision records and a transcript. Run callstencil-scenarios and inspect the allowed call, a denied argument, the hidden direct call and the allowed fixture error side by side.\n\nThe source quickstart uses Python 3.10+ and uv. Use a fresh environment: CallStencil is an attributed fork of mcp-proxy and retains the mcp_proxy module, so the distributions should not be co-installed.\n\nFor the guarded bridge, callstencil requires an explicit valid policy. The compatibility mcp-proxy command remains available; without --policy it forwards without CallStencil enforcement. That distinction belongs in the quickstart, where it can prevent a misleading test.\n\nThe alpha scope is tools/call policy for a stdio server exposed over HTTP or SSE. It does not protect direct server access or supply an OS sandbox.\n\nStart with the controlled fixture, read the policy reference, and report a minimal reproduction if the observed boundary differs from the documented one.\n\nFollow the quickstart in a fresh environment and inspect the generated report:\nhttps://github.com/grishahq/callstencil",
+      "cta": "Download the alpha wheel and SHA256SUMS, verify the wheel checksum, then run the offline scenarios in a fresh environment.",
+      "release_claim_status": "verified_public_release",
+      "linkedin": "CallStencil v0.1.0 is available as a public alpha. The quickstart leaves evidence you can inspect.\n\nDownload callstencil-0.1.0-py3-none-any.whl and SHA256SUMS from the release below. Verify the wheel checksum, then use Python 3.10+ and uv in a fresh environment:\n\nuv venv .venv\nuv pip install --python .venv/bin/python ./callstencil-0.1.0-py3-none-any.whl\n.venv/bin/callstencil-scenarios --output demo-evidence\n\nThe observed clean-install run reports: PASS: 11 scenarios; baseline receipts=10; guarded receipts=2. Open demo-evidence/report.html and compare decisions.jsonl with receipts.jsonl. Receipt means fixture arrival, not a real repository mutation.\n\nCallStencil is an attributed fork of mcp-proxy by Sergey Parfenyuk and contributors. It retains the mcp_proxy module; don't co-install both distributions. The callstencil command requires a valid policy. The compatibility mcp-proxy command without --policy has no CallStencil enforcement.\n\nScope: tools/call policy for a stdio server exposed over HTTP or SSE. Direct server access remains outside the boundary; this provides no OS sandbox.\n\nDownload, verify and reproduce. Report a minimal policy/server/schema example if observed behavior differs from the docs:\nhttps://github.com/grishahq/callstencil/releases/tag/v0.1.0",
       "x_thread": [
-        "1/4 A useful alpha quickstart leaves evidence. CallStencil's local runner writes an HTML report, JSON observations, server receipts, decision records and a transcript. Inspect the boundary, not just the exit code.",
-        "2/4 Start in a fresh environment with Python 3.10+ and uv. CallStencil is an attributed mcp-proxy fork and retains the mcp_proxy module; don't co-install the two distributions.",
-        "3/4 The callstencil command requires a valid policy. The compatibility mcp-proxy command without --policy has no CallStencil enforcement. v0.1 scope: tools/call for a stdio server exposed over HTTP/SSE.",
-        "4/4 Follow the source quickstart, run the offline fixture and inspect its report. Report minimal policy/server/schema reproductions for unexpected behavior.\nhttps://github.com/grishahq/callstencil"
+        "1/5 CallStencil v0.1.0 is a public alpha. Download callstencil-0.1.0-py3-none-any.whl and SHA256SUMS, then verify the wheel checksum. Start in a fresh Python 3.10+ environment.\nhttps://github.com/grishahq/callstencil/releases/tag/v0.1.0",
+        "2/5 With uv installed, run:\nuv venv .venv\nuv pip install --python .venv/bin/python ./callstencil-0.1.0-py3-none-any.whl\n.venv/bin/callstencil-scenarios --output demo-evidence",
+        "3/5 The observed clean-install run reports: PASS: 11 scenarios; baseline receipts=10; guarded receipts=2. Open demo-evidence/report.html. Compare decisions.jsonl with receipts.jsonl. Receipt means fixture arrival, not real repository mutation.",
+        "4/5 CallStencil is an attributed mcp-proxy fork by Sergey Parfenyuk and contributors. Both use mcp_proxy; avoid co-installing them. callstencil requires a policy; compatibility mcp-proxy without --policy has no CallStencil enforcement.",
+        "5/5 Alpha scope: tools/call policy for a stdio server exposed over HTTP/SSE. No OS sandbox or protection against direct server access. Reproduce the fixture and report minimal policy/server/schema examples.\nhttps://github.com/grishahq/callstencil/releases/tag/v0.1.0"
       ],
       "platform_items": {
         "linkedin": {
@@ -204,5 +208,17 @@
         }
       }
     }
-  ]
+  ],
+  "release_verification": {
+    "evidence_path": "../evidence/release-verification.json",
+    "api_evidence_path": "../evidence/release.json",
+    "url": "https://github.com/grishahq/callstencil/releases/tag/v0.1.0",
+    "published_at": "2026-10-25T19:18:12Z",
+    "immutable": true,
+    "prerelease": true,
+    "tag": "v0.1.0",
+    "tag_object_sha": "89147da18f5ca064809cc73c64cc697667d5c69f",
+    "commit_sha": "9c718c4962122115662501cb49bd76f1bbd8856a",
+    "anonymous_downloads_and_hashes_verified": true
+  }
 }

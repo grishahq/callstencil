@@ -2,16 +2,16 @@
 
 Derived from `campaign.json`; edit that canonical file and run `python3 campaign/validate.py --render`.
 
-Prepared: True. Scheduled: False. Published: False.
-Release claims: pending_public_release_readback. Ready for scheduling: False.
+Prepared: 10/10. Scheduled: 0/10. Published: 0/10.
+Release claims: verified_public_release. Ready for scheduling: True.
 
-Prepared copy only. No publishing or scheduling action has been performed. Release availability claims require public release readback.
+Public immutable v0.1.0 alpha and anonymous asset downloads/checksums verified. Platform preparation, scheduling and publication states are recorded separately below; no post is marked scheduled or published without confirmation evidence.
 
 All copy is English. Each beat's audience, hook, evidence, CTA, image and alt text apply to both platform items below. The X copy is adapted into threads rather than truncated from LinkedIn.
 
 CallStencil is an MIT-licensed attributed fork of sparfenyuk/mcp-proxy by Sergey Parfenyuk and contributors, baseline 701a0453487d1b28c8f9806ee4863674c70210dd. Bridging is retained upstream capability; per-call policy is related prior art, not a category novelty claim.
 
-Posting order: problem → design tradeoff → reproducible demo → fair experiment → release quickstart. No account, queue, date or schedule has been assigned.
+Posting order: problem → design tradeoff → reproducible demo → fair experiment → release quickstart. Per-platform schedule and publication metadata below reflect verified records only.
 
 ## 01-problem: Connection is not permission
 
@@ -31,6 +31,8 @@ Alt text: Conceptual cut-paper illustration: abstract cards approach a navy sten
 
 ### LinkedIn — 1078 characters
 
+Item `01-problem-linkedin`. Prepared: True. Scheduled: False. Published: False.
+
 A working tool connection answers a transport question. It leaves the permission question open.
 
 Suppose an agent may create an issue in one repository with a small set of labels. Making create_issue discoverable doesn't express that rule. Hiding another tool from discovery doesn't prove a direct call will be refused either.
@@ -45,6 +47,8 @@ Inspect the hidden_direct_call scenario and ask where your own call boundary liv
 https://github.com/grishahq/callstencil
 
 ### X thread
+
+Item `01-problem-x`. Prepared: True. Scheduled: False. Published: False.
 
 Post 1 — 178 weighted characters
 
@@ -81,6 +85,8 @@ Alt text: Conceptual engineering workbench in ivory, navy, teal and coral: a ste
 
 ### LinkedIn — 1251 characters
 
+Item `02-design-linkedin`. Prepared: True. Scheduled: False. Published: False.
+
 A permission rule should be small enough to review and strict enough to fail closed.
 
 CallStencil v1 uses exact tool names, required argument keys and explicit constraints. For the issue fixture, a rule can require one repository and limit every label to an approved set. Unknown argument keys deny. An empty rules array is a valid deny-all policy.
@@ -97,6 +103,8 @@ Read the policy reference and try deny-all before adding one narrow rule:
 https://github.com/grishahq/callstencil/blob/main/docs/POLICY.md
 
 ### X thread
+
+Item `02-design-x`. Prepared: True. Scheduled: False. Published: False.
 
 Post 1 — 205 weighted characters
 
@@ -133,6 +141,8 @@ Alt text: Browser capture of the actual CallStencil offline demo report, showing
 
 ### LinkedIn — 1254 characters
 
+Item `03-demo-linkedin`. Prepared: True. Scheduled: False. Published: False.
+
 A denial message is useful. An independent server receipt answers a different question: did the call arrive?
 
 CallStencil's demo runs a real subprocess stdio server behind a Streamable HTTP bridge on loopback. The server is a controlled issue fixture. No model key, external account or GitHub mutation is involved.
@@ -149,6 +159,8 @@ Run the local fixture, then compare decisions.jsonl with receipts.jsonl:
 https://github.com/grishahq/callstencil
 
 ### X thread
+
+Item `03-demo-x`. Prepared: True. Scheduled: False. Published: False.
 
 Post 1 — 220 weighted characters
 
@@ -185,6 +197,8 @@ Alt text: Chart derived from the recorded offline demo: 10 baseline receipts, 2 
 
 ### LinkedIn — 1371 characters
 
+Item `04-experiment-linkedin`. Prepared: True. Scheduled: False. Published: False.
+
 10 baseline receipts. 2 guarded receipts. The useful part is what those numbers mean.
 
 The CallStencil demo compares the unguarded bridge with the guarded bridge using controlled scenarios and an independent fixture receipt log. Eight call attempts that reach the baseline fixture produce zero guarded receipts. The approved call and an allowed call that returns a fixture error account for the two guarded receipts.
@@ -201,6 +215,8 @@ Inspect the per-scenario observations before interpreting the totals:
 https://github.com/grishahq/callstencil/blob/main/evidence/demo/report.json
 
 ### X thread
+
+Item `04-experiment-x`. Prepared: True. Scheduled: False. Published: False.
 
 Post 1 — 215 weighted characters
 
@@ -229,48 +245,62 @@ Audience: Python and MCP developers evaluating the alpha
 
 Hook: A useful alpha quickstart should leave files you can inspect, not just a success message.
 
-Evidence: `../README.md`, `../ATTRIBUTION.md`, `../evidence/demo/report.json`
+Evidence: `../README.md`, `../ATTRIBUTION.md`, `../evidence/demo/report.json`, `../evidence/release.json`, `../evidence/release-verification.json`, `../evidence/clean-install.txt`
 
-CTA: Follow the repository quickstart in a fresh environment and inspect the generated report.
+CTA: Download the alpha wheel and SHA256SUMS, verify the wheel checksum, then run the offline scenarios in a fresh environment.
 
 Image: `assets/release-quickstart.png` (software_capture).
 
-Alt text: Actual clean-install CallStencil quickstart output for v0.1.0, with the scenario command and successful evidence report generation.
+Alt text: Rendered observed clean-install output for CallStencil v0.1.0: wheel installation, version command and scenario runner, with 11 passing scenarios, 10 baseline receipts and 2 guarded receipts. This is an HTML rendering of observed output, not an operating-system terminal screenshot.
 
-![Actual clean-install CallStencil quickstart output for v0.1.0, with the scenario command and successful evidence report generation.](assets/release-quickstart.png)
+![Rendered observed clean-install output for CallStencil v0.1.0: wheel installation, version command and scenario runner, with 11 passing scenarios, 10 baseline receipts and 2 guarded receipts. This is an HTML rendering of observed output, not an operating-system terminal screenshot.](assets/release-quickstart.png)
 
-### LinkedIn — 1262 characters
+### LinkedIn — 1280 characters
 
-A useful alpha quickstart should leave files you can inspect, not just a success message.
+Item `05-release-linkedin`. Prepared: True. Scheduled: False. Published: False.
 
-CallStencil's local walkthrough ends with an HTML report, JSON observations, server receipts, decision records and a transcript. Run callstencil-scenarios and inspect the allowed call, a denied argument, the hidden direct call and the allowed fixture error side by side.
+CallStencil v0.1.0 is available as a public alpha. The quickstart leaves evidence you can inspect.
 
-The source quickstart uses Python 3.10+ and uv. Use a fresh environment: CallStencil is an attributed fork of mcp-proxy and retains the mcp_proxy module, so the distributions should not be co-installed.
+Download callstencil-0.1.0-py3-none-any.whl and SHA256SUMS from the release below. Verify the wheel checksum, then use Python 3.10+ and uv in a fresh environment:
 
-For the guarded bridge, callstencil requires an explicit valid policy. The compatibility mcp-proxy command remains available; without --policy it forwards without CallStencil enforcement. That distinction belongs in the quickstart, where it can prevent a misleading test.
+uv venv .venv
+uv pip install --python .venv/bin/python ./callstencil-0.1.0-py3-none-any.whl
+.venv/bin/callstencil-scenarios --output demo-evidence
 
-The alpha scope is tools/call policy for a stdio server exposed over HTTP or SSE. It does not protect direct server access or supply an OS sandbox.
+The observed clean-install run reports: PASS: 11 scenarios; baseline receipts=10; guarded receipts=2. Open demo-evidence/report.html and compare decisions.jsonl with receipts.jsonl. Receipt means fixture arrival, not a real repository mutation.
 
-Start with the controlled fixture, read the policy reference, and report a minimal reproduction if the observed boundary differs from the documented one.
+CallStencil is an attributed fork of mcp-proxy by Sergey Parfenyuk and contributors. It retains the mcp_proxy module; don't co-install both distributions. The callstencil command requires a valid policy. The compatibility mcp-proxy command without --policy has no CallStencil enforcement.
 
-Follow the quickstart in a fresh environment and inspect the generated report:
-https://github.com/grishahq/callstencil
+Scope: tools/call policy for a stdio server exposed over HTTP or SSE. Direct server access remains outside the boundary; this provides no OS sandbox.
+
+Download, verify and reproduce. Report a minimal policy/server/schema example if observed behavior differs from the docs:
+https://github.com/grishahq/callstencil/releases/tag/v0.1.0
 
 ### X thread
 
-Post 1 — 213 weighted characters
+Item `05-release-x`. Prepared: True. Scheduled: False. Published: False.
 
-1/4 A useful alpha quickstart leaves evidence. CallStencil's local runner writes an HTML report, JSON observations, server receipts, decision records and a transcript. Inspect the boundary, not just the exit code.
+Post 1 — 200 weighted characters
 
-Post 2 — 176 weighted characters
+1/5 CallStencil v0.1.0 is a public alpha. Download callstencil-0.1.0-py3-none-any.whl and SHA256SUMS, then verify the wheel checksum. Start in a fresh Python 3.10+ environment.
+https://github.com/grishahq/callstencil/releases/tag/v0.1.0
 
-2/4 Start in a fresh environment with Python 3.10+ and uv. CallStencil is an attributed mcp-proxy fork and retains the mcp_proxy module; don't co-install the two distributions.
+Post 2 — 174 weighted characters
 
-Post 3 — 202 weighted characters
+2/5 With uv installed, run:
+uv venv .venv
+uv pip install --python .venv/bin/python ./callstencil-0.1.0-py3-none-any.whl
+.venv/bin/callstencil-scenarios --output demo-evidence
 
-3/4 The callstencil command requires a valid policy. The compatibility mcp-proxy command without --policy has no CallStencil enforcement. v0.1 scope: tools/call for a stdio server exposed over HTTP/SSE.
+Post 3 — 243 weighted characters
 
-Post 4 — 180 weighted characters
+3/5 The observed clean-install run reports: PASS: 11 scenarios; baseline receipts=10; guarded receipts=2. Open demo-evidence/report.html. Compare decisions.jsonl with receipts.jsonl. Receipt means fixture arrival, not real repository mutation.
 
-4/4 Follow the source quickstart, run the offline fixture and inspect its report. Report minimal policy/server/schema reproductions for unexpected behavior.
-https://github.com/grishahq/callstencil
+Post 4 — 235 weighted characters
+
+4/5 CallStencil is an attributed mcp-proxy fork by Sergey Parfenyuk and contributors. Both use mcp_proxy; avoid co-installing them. callstencil requires a policy; compatibility mcp-proxy without --policy has no CallStencil enforcement.
+
+Post 5 — 230 weighted characters
+
+5/5 Alpha scope: tools/call policy for a stdio server exposed over HTTP/SSE. No OS sandbox or protection against direct server access. Reproduce the fixture and report minimal policy/server/schema examples.
+https://github.com/grishahq/callstencil/releases/tag/v0.1.0

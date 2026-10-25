@@ -1,0 +1,10 @@
+Resolved tag v0.1.0 to sha1:89147da18f5ca064809cc73c64cc697667d5c69f
+Loaded attestation from GitHub API
+✓ Release v0.1.0 verified!
+
+Assets
+callstencil-0.1.0-evidence.zip	sha256:b1c4744d891cf6c45cfabd30ddbc9974d654a33315be5f8a0f2fe642cfe2c6aa
+callstencil-0.1.0-py3-none-any.whl	sha256:9e694c92432482547b846d18c228d29238e1ceb09ae92c40b858c4aead744a92
+callstencil-0.1.0.tar.gz	sha256:f50322c445f97226b065aa2a8d16311bccf69f3973977a96f702f65c5bf2ca39
+SHA256SUMS	sha256:5349e8ed14bde07c1e79708dc02516f1d3c3a7b502f888904ed449f3c1c65379
+

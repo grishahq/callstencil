@@ -1,0 +1,27 @@
+{
+  "anonymous_public_readback": true,
+  "release_url": "https://github.com/grishahq/callstencil/releases/tag/v0.1.0",
+  "release_id": 423607506,
+  "published_at": "2026-10-25T19:18:12Z",
+  "immutable": true,
+  "prerelease": true,
+  "tag": "v0.1.0",
+  "tag_object_sha": "89147da18f5ca064809cc73c64cc697667d5c69f",
+  "commit_sha": "9c718c4962122115662501cb49bd76f1bbd8856a",
+  "all_assets_anonymously_downloaded_and_sha256_verified": true,
+  "asset_names": [
+    "callstencil-0.1.0-evidence.zip",
+    "callstencil-0.1.0-py3-none-any.whl",
+    "callstencil-0.1.0.tar.gz",
+    "SHA256SUMS"
+  ],
+  "clean_public_wheel_install_passed": true,
+  "clean_public_wheel_install_evidence": "evidence/public-install.txt",
+  "scenario_result": {
+    "passed": true,
+    "scenario_count": 11,
+    "baseline_receipts": 10,
+    "guarded_receipts": 2,
+    "blocked_calls": 8
+  }
+}
