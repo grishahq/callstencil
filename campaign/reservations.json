@@ -1,0 +1,14 @@
+{
+  "state": "released_unscheduled",
+  "platform": "linkedin",
+  "slots": [
+    "2026-10-28T10:00:00+04:00",
+    "2026-10-30T10:00:00+04:00",
+    "2026-11-02T10:00:00+04:00",
+    "2026-11-04T10:00:00+04:00",
+    "2026-11-06T10:00:00+04:00"
+  ],
+  "account": "https://www.linkedin.com/in/gregogv/",
+  "timezone": "Asia/Dubai",
+  "reason": "Image upload failure, no native scheduling confirmation"
+}

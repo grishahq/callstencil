@@ -179,7 +179,11 @@ def main() -> None:
     assert target.is_file() and target.read_text() == expected, "CAMPAIGN.md is stale; run with --render"
     if args.require_release:
         assert data["release_claim_status"] == "verified_public_release", "Release readback remains pending"
-        assert data["ready_for_scheduling"] is True
+        if data["ready_for_scheduling"] is not True:
+            blocker = data.get("scheduling_blocker", {})
+            assert blocker.get("state") == "user_access_required"
+            source_path(blocker["evidence_path"])
+            assert data["scheduled"] is False and data["published"] is False
         assert data.get("release_verification"), "Missing public release verification reference"
         verification = json.loads(source_path(data["release_verification"]["evidence_path"]).read_text())
         assert verification["anonymous_public_readback"] is True

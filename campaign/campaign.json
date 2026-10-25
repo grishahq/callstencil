@@ -9,8 +9,8 @@
   "scheduled": false,
   "published": false,
   "release_claim_status": "verified_public_release",
-  "ready_for_scheduling": true,
-  "status_note": "Public immutable v0.1.0 alpha and anonymous asset downloads/checksums verified. Platform preparation, scheduling and publication states are recorded separately below; no post is marked scheduled or published without confirmation evidence.",
+  "ready_for_scheduling": false,
+  "status_note": "All ten campaign items and five image assets are prepared and verified. Native image upload failed in Chrome on both LinkedIn and X. No item is scheduled or published; unused portfolio reservations were released. Enable the browser extension file-URL access, then recheck queues and reserve slots before retrying.",
   "evidence_snapshot": {
     "path": "../evidence/demo/report.json",
     "passed": true,
@@ -48,13 +48,15 @@
           "id": "01-problem-linkedin",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         },
         "x": {
           "id": "01-problem-x",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         }
       }
     },
@@ -84,13 +86,15 @@
           "id": "02-design-linkedin",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         },
         "x": {
           "id": "02-design-x",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         }
       }
     },
@@ -120,13 +124,15 @@
           "id": "03-demo-linkedin",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         },
         "x": {
           "id": "03-demo-x",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         }
       }
     },
@@ -157,13 +163,15 @@
           "id": "04-experiment-linkedin",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         },
         "x": {
           "id": "04-experiment-x",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         }
       }
     },
@@ -198,13 +206,15 @@
           "id": "05-release-linkedin",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         },
         "x": {
           "id": "05-release-x",
           "prepared": true,
           "scheduled": false,
-          "published": false
+          "published": false,
+          "blocker": "Native image upload access; see evidence/social/native-result.json"
         }
       }
     }
@@ -220,5 +230,12 @@
     "tag_object_sha": "89147da18f5ca064809cc73c64cc697667d5c69f",
     "commit_sha": "9c718c4962122115662501cb49bd76f1bbd8856a",
     "anonymous_downloads_and_hashes_verified": true
+  },
+  "scheduling_blocker": {
+    "state": "user_access_required",
+    "message": "Chrome native campaign image uploads failed",
+    "required_user_action": "Enable Allow access to file URLs for the ChatGPT browser extension",
+    "source": "Browser upload troubleshooting guidance",
+    "evidence_path": "../evidence/social/native-result.json"
   }
 }

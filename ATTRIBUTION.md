@@ -9,3 +9,5 @@ Upstream already supplies stdio ↔ SSE/Streamable HTTP bridging, named stdio se
 CallStencil adds strict versioned argument policies, default-deny tools/call enforcement, schema pin checks, redacted decision JSONL, a required-policy command and an offline scenario runner with independent server receipts. The motivating [upstream issue #270](https://github.com/sparfenyuk/mcp-proxy/issues/270) proposes a neutral call authorization hook; its author d8joseph describes a Tenuo demonstration. We did not copy that demonstration or claim to originate per-call authorization. Tools such as ToolPermit, ToolHive and AgentBarrier also address related policy needs; no category novelty is claimed.
 
 The distribution is named `callstencil`; the Python module remains `mcp_proxy` to keep changes focused. Do not co-install it with the original mcp-proxy distribution in the same environment because the modules and compatibility commands overlap.
+
+See [related work and precise scope](docs/PRIOR_ART.md) for dated primary-source references.

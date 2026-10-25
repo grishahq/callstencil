@@ -30,8 +30,10 @@
     "native_access": {
       "linkedin": "Gregory Gvadzabia / https://www.linkedin.com/in/gregogv/ authenticated",
       "x": "@grishahq authenticated",
-      "scheduling": "waiting for the shared portfolio lock; no own slots reserved yet"
-    }
+      "scheduling": "Blocked: native image uploads fail; no confirmed queue entries; all CallStencil reservations released"
+    },
+    "native_attempt_evidence": "evidence/social/native-result.json",
+    "native_draft_notes": "First LinkedIn item returned to draft after explicit upload failure; complete first X thread copy entered and save requested, persistence not claimed"
   },
   "evidence_paths": [
     "evidence/demo/report.json",
@@ -44,10 +46,25 @@
     "evidence/public-install.txt",
     "evidence/campaign-validation.txt",
     "evidence/release-attestation.txt",
-    "evidence/release-ci.json"
+    "evidence/release-ci.json",
+    "evidence/source-install.txt",
+    "evidence/social/native-result.json",
+    "evidence/social/linkedin-upload-error.jpg"
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "type": "browser_upload_access",
+      "action": "Enable Allow access to file URLs for the ChatGPT browser extension, then confirm retry",
+      "observed": [
+        "LinkedIn: We encountered a problem uploading your image.",
+        "X: Some of your media failed to load."
+      ],
+      "evidence": "evidence/social/native-result.json"
+    }
+  ],
   "next_actions": [
-    "Finish campaign validation and native scheduling with shared portfolio lock"
+    "User enables Chrome extension file URL access and confirms retry",
+    "Recheck native queues and shared portfolio reservations",
+    "Schedule all five LinkedIn posts and five X threads where supported; verify each readback; do not duplicate prior attempts"
   ]
 }

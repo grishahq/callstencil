@@ -4,6 +4,8 @@
 
 CallStencil is an attributed fork of [mcp-proxy](https://github.com/sparfenyuk/mcp-proxy). It retains the useful stdio/SSE/Streamable HTTP bridge and adds strict per-call policies for a stdio server exposed over HTTP or SSE. Rules check tool names, argument values and input-schema fingerprints **before** forwarding `tools/call`.
 
+![Actual CallStencil report from the controlled transport experiment](campaign/assets/demo-report.png)
+
 The included issue server is a controlled, offline fixture. It records receipt of calls; it never creates issues or deletes repositories on GitHub. No model key or external account is needed.
 
 ## Install and reproduce
@@ -63,7 +65,7 @@ uv run mypy src
 uv build
 ```
 
-[Recorded demo](evidence/demo/report.html), [methodology](docs/EXPERIMENT.md), [independent code review](docs/REVIEW.md), [changelog](CHANGELOG.md), and [implementation/roadmap](PLAN.md). Results describe a deterministic controlled fixture, not production security coverage or a latency benchmark.
+[Recorded demo](evidence/demo/report.html), [launch campaign review](campaign/REVIEW.html), [methodology](docs/EXPERIMENT.md), [independent code review](docs/REVIEW.md), [changelog](CHANGELOG.md), and [implementation/roadmap](PLAN.md). Results describe a deterministic controlled fixture, not production security coverage or a latency benchmark.
 
 v0.2 plans general JSON/JUnit scenario suites for CI. v0.3 plans policy diffs and schema-drift workflows for two documented servers. Monthly upstream checks and focused regression fixes are described in the plan. No security SLA is promised.
 

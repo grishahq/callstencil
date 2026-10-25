@@ -3,9 +3,9 @@
 Derived from `campaign.json`; edit that canonical file and run `python3 campaign/validate.py --render`.
 
 Prepared: 10/10. Scheduled: 0/10. Published: 0/10.
-Release claims: verified_public_release. Ready for scheduling: True.
+Release claims: verified_public_release. Ready for scheduling: False.
 
-Public immutable v0.1.0 alpha and anonymous asset downloads/checksums verified. Platform preparation, scheduling and publication states are recorded separately below; no post is marked scheduled or published without confirmation evidence.
+All ten campaign items and five image assets are prepared and verified. Native image upload failed in Chrome on both LinkedIn and X. No item is scheduled or published; unused portfolio reservations were released. Enable the browser extension file-URL access, then recheck queues and reserve slots before retrying.
 
 All copy is English. Each beat's audience, hook, evidence, CTA, image and alt text apply to both platform items below. The X copy is adapted into threads rather than truncated from LinkedIn.
 

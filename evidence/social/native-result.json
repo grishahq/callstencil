@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-25",
+  "timezone": "Asia/Dubai",
+  "linkedin": {
+    "account": "https://www.linkedin.com/in/gregogv/",
+    "attempted_slot": "2026-10-28T10:00:00+04:00",
+    "result": "failed",
+    "message": "We encountered a problem uploading your image.",
+    "scheduled": false,
+    "published": false,
+    "queue_count_before": 1,
+    "queue_count_after_failure": 1,
+    "draft_preserved": true
+  },
+  "x": {
+    "account": "@grishahq",
+    "result": "media_upload_failed",
+    "message": "Some of your media failed to load.",
+    "scheduled": false,
+    "published": false,
+    "first_thread_copy": "four posts entered; Save draft requested",
+    "media_status": "Preparing media persisted after failure"
+  },
+  "next_action": "User enables Allow access to file URLs for the ChatGPT browser extension, then native queue and slots must be rechecked before retrying."
+}
