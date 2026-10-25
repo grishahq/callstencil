@@ -18,7 +18,7 @@ uv sync --frozen
 uv run callstencil-scenarios --output .local-demo
 ```
 
-Open `.local-demo/report.html`. Inspect `report.json`, `receipts.jsonl`, `decisions.jsonl` and `transcript.txt` to distinguish proxy denials, server receipt and server errors. The command exits nonzero if a receipt or error assertion fails. Scenarios use local subprocesses and real Streamable HTTP connections on loopback; no remote tool account is touched.
+Use a new empty output directory for each run. Open `.local-demo/report.html`. Inspect `report.json`, `receipts.jsonl`, `decisions.jsonl` and `transcript.txt` to distinguish proxy denials, server receipt and server errors. The command exits nonzero if a receipt or error assertion fails. Scenarios use local subprocesses and real Streamable HTTP connections on loopback; no remote tool account is touched.
 
 For a clean installation from the release wheel, download `callstencil-0.1.0-py3-none-any.whl` and `SHA256SUMS` from the [GitHub release](https://github.com/grishahq/callstencil/releases/tag/v0.1.0), verify the checksum, then:
 

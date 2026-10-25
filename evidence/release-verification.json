@@ -23,5 +23,10 @@
     "baseline_receipts": 10,
     "guarded_receipts": 2,
     "blocked_calls": 8
-  }
+  },
+  "github_cli_release_attestation_verified": true,
+  "attestation_evidence": "evidence/release-attestation.txt",
+  "exact_release_commit_ci": "https://github.com/grishahq/callstencil/actions/runs/40225244300",
+  "clean_public_source_install_passed": true,
+  "clean_public_source_install_evidence": "evidence/source-install.txt"
 }

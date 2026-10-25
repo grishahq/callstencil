@@ -18,7 +18,20 @@
     "prepared": true,
     "release_claims_verified": true,
     "scheduled": false,
-    "published": false
+    "published": false,
+    "prepared_items": {
+      "linkedin": 5,
+      "x_threads": 5,
+      "x_posts": 21,
+      "images": 5,
+      "original_generated_concepts": 2
+    },
+    "validation": "All copy, character limits, source evidence, image files and provenance hashes verified",
+    "native_access": {
+      "linkedin": "Gregory Gvadzabia / https://www.linkedin.com/in/gregogv/ authenticated",
+      "x": "@grishahq authenticated",
+      "scheduling": "waiting for the shared portfolio lock; no own slots reserved yet"
+    }
   },
   "evidence_paths": [
     "evidence/demo/report.json",
@@ -28,7 +41,10 @@
     "docs/REVIEW.md",
     "campaign/CAMPAIGN.md",
     "evidence/release-verification.json",
-    "evidence/public-install.txt"
+    "evidence/public-install.txt",
+    "evidence/campaign-validation.txt",
+    "evidence/release-attestation.txt",
+    "evidence/release-ci.json"
   ],
   "blockers": [],
   "next_actions": [

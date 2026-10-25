@@ -1,0 +1,4 @@
+PASS: 5 LinkedIn posts (600–1600 chars), 5 X threads (3–5 posts, <=280 weighted chars), metadata and evidence. All 5 image files and provenance hashes verified.
+Release status: verified_public_release. Scheduled: 0/10. Published: 0/10.
+LinkedIn lengths: 1078, 1251, 1254, 1371, 1280
+X weighted lengths: 178,207,208,192; 205,215,199,180; 220,183,215,199; 215,177,177,211,161; 200,174,243,235,230
